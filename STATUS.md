@@ -16,8 +16,8 @@ Deadline: **1 November 2026** (target submit 31 Oktober)
 
 ### Prompt 1 — ML pipeline (`docs/01_PROMPT_ML_PIPELINE.md`)
 - [x] `features.py` + sanity check fitur — definisi terarah: 13/13 lolos, 253 overlap (134 phantom/92 normal/27 lain), enrichment 69,778x; tujuh tes lolos
-- [ ] Isolation Forest (`if_score`)
-- [ ] XGBoost 5-fold OOF: `if_only`, `xgb_only`, `hybrid`
+- [x] Isolation Forest (`if_score`)
+- [x] XGBoost 5-fold OOF: `if_only`, `xgb_only`, `hybrid`
 - [ ] Evaluasi + eksperimen hold-out per jenis fraud
 - [ ] SHAP + teks alasan + aturan pola dugaan
 - [ ] Ekspor JSON ke `web/public/data/` + validasi
@@ -29,6 +29,8 @@ Catatan Prompt 1 (24 Oktober 2026): preflight berhasil, Python 3.12.6; venv `ml/
 Checkpoint fitur: 62.711 klaim -> 27 fitur, seluruhnya berhingga; lima tes lolos termasuk pengubahan/penghapusan label tidak mengubah fitur. Durasi tahap fitur 1,236 detik. Sanity `inpatient_overlap`: phantom 134/359 = 37,326%, sedangkan dokumen mengharapkan mayoritas (>50%); deviasi dari batas 50% = 25,35%, di luar toleransi. Klaim overlap juga mencakup 183 normal dan 42 jenis lain. Implementasi menandai kedua klaim dalam pasangan rawat inap lintas faskes yang tumpang tindih, tanpa memilih berdasarkan label. **Berhenti sebelum training sesuai instruksi Abil; Gate A belum tercapai.** Tidak ada model/OOF/hold-out/SHAP/ekspor atau `run_all.py` yang dijalankan/dibuat. `web/` tetap tidak berubah. Laporan: `ml/reports/FEATURE_SANITY.md` dan `ml/reports/feature_sanity.json`; cara reproduksi: `ml/README.md`. Batas absolut 1 poin persentase dipakai untuk ekspektasi sekitar 0% karena deviasi relatif terhadap nol tidak terdefinisi. Hash kedua CSV dan generator sama sebelum/sesudah tahap fitur.
 
 Revisi disetujui Abil dan Claude: ekspektasi lama pada overlap simetris dinyatakan salah dan hasil awal diverifikasi independen. Fitur diganti menjadi terarah: tandai rawat inap yang masuk lebih belakangan; tanggal masuk sama menandai keduanya; interval setengah terbuka dan hanya lintas faskes. Sanity terakhir mensyaratkan proporsi phantom >50% sekaligus enrichment >=10x. Ekspektasi jumlah: 253 total / 134 phantom / 92 normal / 27 lain. Definisi ini dipilih **setelah membandingkan dua definisi pada data penuh**, sehingga merupakan keputusan desain berbasis data dan membatasi independensi evaluasi. Dokumen Prompt 1 dan unit test diperbarui; dataset/generator tetap tidak diubah.
+
+Training awal selesai: 27,976 detik; IF 300 tree pada 23 fitur numerik setelah RobustScaler, tanpa label. Supervised OOF lima fold distratifikasi `fraud_type`; early stopping memakai split validasi 20% di dalam train, kemudian refit seluruh outer train dengan jumlah tree terpilih. Fold uji tidak dipakai fit/early stopping. PR-AUC/AP: IF 0,258685; XGBoost 0,804339; hybrid 0,799798. Recall@5%: 32,0761% / 77,6940% / 77,0115%. Hybrid sedikit lebih rendah; parameter tidak disetel berdasarkan hasil ini. Hold-out enam jenis sedang dijalankan. IF dan fitur peer/history mengikuti seluruh batch tanpa label sesuai brief, sehingga evaluasi bersifat transduktif; bukan validasi prospektif independen.
 
 ### Prompt 2 — Dashboard (`docs/02_PROMPT_DASHBOARD.md`)
 - [x] Scaffold Vite + React + TS + Tailwind, data contoh sesuai kontrak
