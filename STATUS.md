@@ -15,7 +15,7 @@ Deadline: **1 November 2026** (target submit 31 Oktober)
 - [x] Workspace, AGENTS.md, dan brief/prompt disiapkan
 
 ### Prompt 1 — ML pipeline (`docs/01_PROMPT_ML_PIPELINE.md`)
-- [ ] `features.py` + sanity check fitur
+- [ ] `features.py` + sanity check fitur — implementasi selesai; 12/13 pemeriksaan lolos, satu gagal >20%; training ditahan
 - [ ] Isolation Forest (`if_score`)
 - [ ] XGBoost 5-fold OOF: `if_only`, `xgb_only`, `hybrid`
 - [ ] Evaluasi + eksperimen hold-out per jenis fraud
@@ -25,6 +25,8 @@ Deadline: **1 November 2026** (target submit 31 Oktober)
 - [ ] **GATE A: lapor ke Abil dan tunggu konfirmasi**
 
 Catatan Prompt 1 (24 Oktober 2026): preflight berhasil, Python 3.12.6; venv `ml/.venv`; NumPy 2.5.4, pandas 3.1.0, scikit-learn 1.9.1, XGBoost 3.4.1, SHAP 0.54.1, PyArrow 26.0.0. Versi terpasang dipin di `ml/requirements.txt`. Perubahan dashboard dilarang selain lima JSON ekspor di `web/public/data/`. Training hanya dilanjutkan jika sanity check fitur tidak meleset lebih dari 20%; dataset dan generator tidak diregenerasi atau diubah.
+
+Checkpoint fitur: 62.711 klaim -> 27 fitur, seluruhnya berhingga; lima tes lolos termasuk pengubahan/penghapusan label tidak mengubah fitur. Durasi tahap fitur 1,236 detik. Sanity `inpatient_overlap`: phantom 134/359 = 37,326%, sedangkan dokumen mengharapkan mayoritas (>50%); deviasi dari batas 50% = 25,35%, di luar toleransi. Klaim overlap juga mencakup 183 normal dan 42 jenis lain. Implementasi menandai kedua klaim dalam pasangan rawat inap lintas faskes yang tumpang tindih, tanpa memilih berdasarkan label. **Berhenti sebelum training sesuai instruksi Abil; Gate A belum tercapai.** Tidak ada model/OOF/hold-out/SHAP/ekspor atau `run_all.py` yang dijalankan/dibuat. `web/` tetap tidak berubah. Laporan: `ml/reports/FEATURE_SANITY.md` dan `ml/reports/feature_sanity.json`; cara reproduksi: `ml/README.md`. Batas absolut 1 poin persentase dipakai untuk ekspektasi sekitar 0% karena deviasi relatif terhadap nol tidak terdefinisi. Hash kedua CSV dan generator sama sebelum/sesudah tahap fitur.
 
 ### Prompt 2 — Dashboard (`docs/02_PROMPT_DASHBOARD.md`)
 - [x] Scaffold Vite + React + TS + Tailwind, data contoh sesuai kontrak
