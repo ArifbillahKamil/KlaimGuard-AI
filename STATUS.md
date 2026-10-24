@@ -26,12 +26,12 @@ Deadline: **1 November 2026** (target submit 31 Oktober)
 
 ### Prompt 2 — Dashboard (`docs/02_PROMPT_DASHBOARD.md`)
 - [x] Scaffold Vite + React + TS + Tailwind, data contoh sesuai kontrak
-- [ ] Ringkasan, Antrean Audit (panel detail + keputusan auditor + ekspor CSV)
-- [ ] Faskes, Evaluasi Model (Mode Evaluasi), Tata Kelola
+- [x] Ringkasan, Antrean Audit (panel detail + keputusan auditor + ekspor CSV)
+- [x] Faskes, Evaluasi Model (Mode Evaluasi), Tata Kelola
 - [ ] Sambungkan ke data asli dari Prompt 1
 - [ ] Screenshot desktop + mobile di `web/screenshots/`
 
-Catatan agent kedua (24 Oktober 2026): pekerjaan dibatasi pada `web/` dan bagian Prompt 2 ini; `ml/` tidak disentuh, tidak deploy. Generator contoh sudah dijalankan: 300 klaim, 12 faskes, seed 42, lima JSON. Skor, SHAP, dan seluruh metrik/hold-out bersifat ilustratif, bukan hasil ML. Metadata tambahan `summary.data_source = "sample"` menampilkan peringatan contoh; generator menolak menimpa ekspor ML. Vite 6 dipilih agar kompatibel dengan Node lokal v22.11.0; npm 10.9.0 dan Git 2.44.0 tersedia. Implementasi halaman ditulis, verifikasi browser sedang dikerjakan.
+Catatan agent kedua (24 Oktober 2026): pekerjaan dibatasi pada `web/` dan bagian Prompt 2 ini; `ml/` tidak disentuh, tidak deploy. Generator contoh sudah dijalankan: 300 klaim, 12 faskes, seed 42, lima JSON. Skor, SHAP, dan seluruh metrik/hold-out bersifat ilustratif, bukan hasil ML. Metadata tambahan `summary.data_source = "sample"` menampilkan peringatan contoh; generator menolak menimpa ekspor ML. Lima halaman, tabel virtual, filter, pengurutan, panel detail, keputusan lokal, CSV, Mode Evaluasi dan kondisi loading/error/empty sudah berjalan. Halaman Faskes dan Evaluasi dimuat secara lazy; font Inter disajikan lokal. Vite 6 dipilih agar cocok dengan Node v22.11.0 yang terbaca di sandbox; eksekusi build/QA di luar sandbox memakai Node v24.20.0. Lighthouse 13.5 (alat QA opsional) membutuhkan Node >=22.19. Build berhasil; QA browser 14 kelompok pemeriksaan lolos, termasuk penyimpanan kosong/rusak/ditolak dan CSV aman dari formula. Perapian artefak screenshot sedang diselesaikan. Integrasi JSON hasil ML tetap menunggu Prompt 1.
 
 ### Prompt 3 — Deploy & QA (`docs/03_PROMPT_DEPLOY_VERCEL_QA.md`)
 - [ ] QA lokal (build bersih, rute, filter, ekspor, mobile 390 px)
