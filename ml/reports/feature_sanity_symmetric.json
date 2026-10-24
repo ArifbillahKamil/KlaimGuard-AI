@@ -1,0 +1,271 @@
+{
+  "seed": 42,
+  "synthetic": true,
+  "n_claims": 62711,
+  "n_features": 27,
+  "feature_names": [
+    "dx_peer_ratio",
+    "proc_peer_ratio",
+    "ratio_gap",
+    "comp_ratio_room",
+    "comp_ratio_procedure",
+    "comp_ratio_drug",
+    "comp_ratio_labrad",
+    "comp_ratio_other",
+    "comp_share_room",
+    "comp_share_procedure",
+    "comp_share_drug",
+    "comp_share_labrad",
+    "comp_share_other",
+    "pair_rarity",
+    "los_ratio",
+    "nn_dist",
+    "patient_n_claims",
+    "patient_once",
+    "same_pat_fk_3d",
+    "repeat_14d",
+    "inpatient_overlap",
+    "fk_day_burst",
+    "fk_loo_ratio",
+    "faskes_class",
+    "service_type",
+    "severity",
+    "faskes_ownership"
+  ],
+  "numeric_features": [
+    "dx_peer_ratio",
+    "proc_peer_ratio",
+    "ratio_gap",
+    "comp_ratio_room",
+    "comp_ratio_procedure",
+    "comp_ratio_drug",
+    "comp_ratio_labrad",
+    "comp_ratio_other",
+    "comp_share_room",
+    "comp_share_procedure",
+    "comp_share_drug",
+    "comp_share_labrad",
+    "comp_share_other",
+    "pair_rarity",
+    "los_ratio",
+    "nn_dist",
+    "patient_n_claims",
+    "patient_once",
+    "same_pat_fk_3d",
+    "repeat_14d",
+    "inpatient_overlap",
+    "fk_day_burst",
+    "fk_loo_ratio"
+  ],
+  "feature_input_whitelist": [
+    "patient_id",
+    "faskes_id",
+    "faskes_class",
+    "faskes_ownership",
+    "service_type",
+    "dx",
+    "severity",
+    "proc",
+    "admit_date",
+    "discharge_date",
+    "los",
+    "cost_room",
+    "cost_procedure",
+    "cost_drug",
+    "cost_labrad",
+    "cost_other",
+    "claim_total"
+  ],
+  "forbidden_features_absent": true,
+  "source_sha256": {
+    "data/claims_synthetic.csv": "f6dbf500f78a81370d742f7d33e5390661a0ab920792df9930bfcc22384e21fe",
+    "data/faskes.csv": "8de0f64cf9d495aa969228c76f10e70f8a201c0b4b852041758642813fb31c15",
+    "src/generate_claims.py": "85988f94bbfc325b4976188c964dcc1df7bb018475b15c8961a8f3569a8c1625"
+  },
+  "observation_window_days": 385,
+  "checks": [
+    {
+      "check": "nn_dist < 0.015 | cloning",
+      "actual": 1.0,
+      "expected": 1.0,
+      "unit": "rate",
+      "mode": "target",
+      "relative_deviation": 0.0,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "nn_dist < 0.015 | normal",
+      "actual": 0.008693910924958699,
+      "expected": 0.01,
+      "unit": "rate",
+      "mode": "upper",
+      "relative_deviation": 0.0,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "same_pat_fk_3d >= 1 | unbundling",
+      "actual": 1.0,
+      "expected": 1.0,
+      "unit": "rate",
+      "mode": "target",
+      "relative_deviation": 0.0,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "same_pat_fk_3d >= 1 | repeat",
+      "actual": 0.19747899159663865,
+      "expected": 0.2,
+      "unit": "rate",
+      "mode": "target",
+      "relative_deviation": 0.012605042016806817,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "same_pat_fk_3d >= 1 | normal",
+      "actual": 0.002135932050661638,
+      "expected": 0.0,
+      "unit": "rate",
+      "mode": "near_zero",
+      "relative_deviation": null,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": "Predeclared absolute bound <=1 percentage point; relative deviation from 0 undefined."
+    },
+    {
+      "check": "median ratio_gap | upcoding",
+      "actual": 2.2251877657283066,
+      "expected": 2.3,
+      "unit": "value",
+      "mode": "target",
+      "relative_deviation": 0.03252705837899707,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "median ratio_gap | others",
+      "actual": 0.9974081576446444,
+      "expected": 1.0,
+      "unit": "value",
+      "mode": "target",
+      "relative_deviation": 0.002591842355355589,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "median pair_rarity | upcoding",
+      "actual": 0.9948964274992494,
+      "expected": 0.99,
+      "unit": "value",
+      "mode": "target",
+      "relative_deviation": 0.004945886362878239,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "median pair_rarity | normal",
+      "actual": 0.025593008739076106,
+      "expected": 0.03,
+      "unit": "value",
+      "mode": "target",
+      "relative_deviation": 0.1468997086974631,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "median dx_peer_ratio | inflated",
+      "actual": 1.2775145367604077,
+      "expected": 1.3,
+      "unit": "value",
+      "mode": "target",
+      "relative_deviation": 0.01729651018430179,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "median dx_peer_ratio | unbundling",
+      "actual": 0.44954666221659384,
+      "expected": 0.45,
+      "unit": "value",
+      "mode": "target",
+      "relative_deviation": 0.0010074172964581586,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "median dx_peer_ratio | others",
+      "actual": 1.0,
+      "expected": 1.0,
+      "unit": "value",
+      "mode": "target",
+      "relative_deviation": 0.0,
+      "within_document": true,
+      "passed_20pct_gate": true,
+      "note": ""
+    },
+    {
+      "check": "phantom fraction | inpatient_overlap=1",
+      "actual": 0.3732590529247911,
+      "expected": 0.5,
+      "unit": "rate",
+      "mode": "lower",
+      "relative_deviation": 0.2534818941504178,
+      "within_document": false,
+      "passed_20pct_gate": false,
+      "note": "Document: majority (>50%) of flagged claims are phantom. Both conflicting inpatient claims must be marked without labels."
+    }
+  ],
+  "passed_20pct_gate": false,
+  "inpatient_overlap_by_label_for_diagnostics_only": {
+    "cloning": {
+      "n_claims": 336,
+      "overlap_flagged": 7
+    },
+    "inflated": {
+      "n_claims": 532,
+      "overlap_flagged": 7
+    },
+    "none": {
+      "n_claims": 59927,
+      "overlap_flagged": 183
+    },
+    "phantom": {
+      "n_claims": 476,
+      "overlap_flagged": 134
+    },
+    "repeat": {
+      "n_claims": 476,
+      "overlap_flagged": 8
+    },
+    "unbundling": {
+      "n_claims": 404,
+      "overlap_flagged": 9
+    },
+    "upcoding": {
+      "n_claims": 560,
+      "overlap_flagged": 11
+    }
+  },
+  "duration_seconds": 1.236,
+  "notes": [
+    "All data are synthetic; this is not a real-world performance claim.",
+    "Raw labels and claim_id are excluded before any feature computation.",
+    "Raw patient_id/faskes_id define groups only; neither is a model input.",
+    "Historical and peer features use the unlabeled full retrospective batch.",
+    "Inpatient intervals are half-open, cross-facility, and both members of a conflicting pair are flagged.",
+    "No model is trained by the feature-stage command."
+  ]
+}

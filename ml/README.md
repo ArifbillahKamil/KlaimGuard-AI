@@ -2,7 +2,9 @@
 
 **Semua data sintetis, bukan data peserta JKN. Angka performa bukan klaim performa dunia nyata. Skor nantinya hanya rekomendasi prioritas; keputusan akhir tetap pada auditor manusia.**
 
-Status saat ini: **berhenti pada sanity gate fitur sebelum training**. Implementasi fitur selesai; 12 dari 13 sanity check lolos. Proporsi phantom pada klaim rawat inap yang overlap adalah 37,326%, meleset 25,35% terhadap batas mayoritas 50%. Lihat [laporan checkpoint lengkap](reports/FEATURE_SANITY.md).
+Status saat ini: **sanity gate fitur terarah lolos 13/13; training dilanjutkan**. Terdapat 253 klaim overlap, terdiri atas 134 phantom, 92 normal dan 27 jenis lain. Proporsi phantom 52,964%, enrichment terhadap base rate phantom 69,778x. Tujuh unit test lolos.
+
+Keputusan Abil dan Claude: ekspektasi lama pada definisi simetris diganti karena kedua klaim dalam pasangan ikut tertandai. Definisi terarah dipilih **setelah membandingkan dua definisi pada data penuh**, bukan sebelum melihat data. Ini keputusan desain berbasis data yang membatasi independensi evaluasi dan akan dicantumkan pada laporan model. Dataset dan generator tidak diubah. [Laporan penghentian awal](reports/FEATURE_SANITY.md) disimpan sebagai riwayat.
 
 ## Lingkungan dan menjalankan tahap fitur
 
@@ -36,7 +38,7 @@ Matriks berisi 23 fitur numerik dan empat kategorikal yang dikodekan, total 27 k
 | `patient_n_claims`, `patient_once` | Jumlah klaim pasien dan indikator hanya muncul sekali. |
 | `same_pat_fk_3d` | Jumlah klaim lain di faskes sama dalam selisih tanggal masuk ±3 hari, tanpa menghitung dirinya sendiri. |
 | `repeat_14d` | Ada klaim diagnosis/prosedur sama pada pasien sama 1–14 hari sebelumnya; tanggal masuk yang sama tidak termasuk tanggal sebelumnya. |
-| `inpatient_overlap` | Ada rawat inap pasien sama di faskes berbeda yang tumpang tindih pada interval setengah terbuka. Kedua anggota pasangan konflik ditandai. |
+| `inpatient_overlap` | Terarah: rawat inap masuk lebih belakangan daripada rawat inap pasien sama di faskes berbeda yang masih tumpang tindih pada interval `[admit, discharge)`. Tanggal masuk sama menandai keduanya. Rawat jalan dikecualikan. |
 | `fk_day_burst` | Jumlah klaim faskes pada hari itu / rata-rata klaim per hari pada seluruh rentang observasi kalender, termasuk hari tanpa klaim; denominator minimal 0,05. |
 | `fk_loo_ratio` | Rata-rata `dx_peer_ratio` faskes dengan klaim sendiri dikeluarkan. Singleton diisi 1. |
 | Kategorikal | Kelas D/C/B/A = 1/2/3/4; RJTL/RITL = 0/1; keparahan I/II/III = 1/2/3; Pemerintah/Swasta = 0/1. |

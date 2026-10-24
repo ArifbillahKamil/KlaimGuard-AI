@@ -31,11 +31,11 @@ class FeatureChecks(unittest.TestCase):
         features, _ = build_features(example())
         np.testing.assert_allclose(features.nn_dist.to_numpy(), [1 / 101, 1 / 101, 1, 1])
 
-    def test_history_and_symmetric_cross_facility_overlap(self):
+    def test_history_and_directed_cross_facility_overlap(self):
         features, _ = build_features(example())
         self.assertEqual(features.same_pat_fk_3d.tolist(), [1, 1, 0, 0])
         self.assertEqual(features.repeat_14d.tolist(), [0, 1, 1, 0])
-        self.assertEqual(features.inpatient_overlap.tolist(), [1, 1, 1, 0])
+        self.assertEqual(features.inpatient_overlap.tolist(), [0, 0, 1, 0])
         self.assertEqual(features.patient_n_claims.tolist(), [3, 3, 3, 1])
         self.assertEqual(features.patient_once.tolist(), [0, 0, 0, 1])
 
@@ -64,6 +64,17 @@ class FeatureChecks(unittest.TestCase):
         features, _ = build_features(raw)
         self.assertEqual(features.inpatient_overlap.tolist(), [0, 0, 0, 0])
         self.assertEqual(features.repeat_14d.iloc[1], 0)
+
+    def test_earlier_admission_is_not_flagged(self):
+        raw = example().iloc[[0, 2]].copy()
+        features, _ = build_features(raw)
+        self.assertEqual(features.inpatient_overlap.tolist(), [0, 1])
+
+    def test_equal_admission_dates_flag_both(self):
+        raw = example().iloc[[0, 2]].copy()
+        raw.loc[:, "admit_date"] = "2025-01-01"
+        features, _ = build_features(raw)
+        self.assertEqual(features.inpatient_overlap.tolist(), [1, 1])
 
 
 if __name__ == "__main__":

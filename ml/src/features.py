@@ -121,10 +121,11 @@ def _temporal_features(frame: pd.DataFrame) -> tuple[np.ndarray, np.ndarray, np.
         indexes = np.asarray(indexes, dtype=np.int64)
         if len(indexes) < 2:
             continue
-        # Half-open intervals [admit, discharge); mark both conflicting claims.
+        # Directed half-open overlap: mark the later admission; ties mark both.
         conflicts = (days[indexes, None] < ends[indexes][None, :])
         conflicts &= days[indexes][None, :] < ends[indexes, None]
         conflicts &= facilities[indexes, None] != facilities[indexes][None, :]
+        conflicts &= days[indexes, None] >= days[indexes][None, :]
         overlap[indexes] = conflicts.any(axis=1).astype(np.int64)
     return same_3d, repeat_14d, overlap
 
@@ -240,7 +241,14 @@ def sanity_checks(features: pd.DataFrame, claims: pd.DataFrame) -> list[dict]:
     add("median dx_peer_ratio | others", features.loc[~types.isin(["inflated", "unbundling"]), "dx_peer_ratio"].median(), 1.0)
     flagged = features.inpatient_overlap.eq(1)
     phantom_fraction = float(types[flagged].eq("phantom").mean()) if flagged.any() else 0.0
-    add("phantom fraction | inpatient_overlap=1", phantom_fraction, 0.50, "rate", "lower", "Document: majority (>50%) of flagged claims are phantom. Both conflicting inpatient claims must be marked without labels.")
+    base_rate = float(types.eq("phantom").mean())
+    enrichment = phantom_fraction / base_rate if base_rate else 0.0
+    add("phantom fraction | inpatient_overlap=1", phantom_fraction, 0.50, "rate", "lower",
+        "Directed definition selected after comparing definitions on the full dataset; requires phantom fraction >50% AND enrichment >=10x.")
+    checks[-1].update({"phantom_base_rate": base_rate, "enrichment": enrichment,
+                       "expected_min_enrichment": 10.0,
+                       "within_document": phantom_fraction > 0.50 and enrichment >= 10.0,
+                       "passed_20pct_gate": phantom_fraction > 0.50 and enrichment >= 10.0})
     return checks
 
 
@@ -272,6 +280,12 @@ def run_feature_stage(artifact_dir: Path | None = None) -> dict:
     passed = all(c["passed_20pct_gate"] for c in checks)
     group_counts = features.assign(fraud_type=claims.fraud_type).groupby("fraud_type").agg(
         n_claims=("inpatient_overlap", "size"), overlap_flagged=("inpatient_overlap", "sum"))
+    overlap_counts = {"total": int(features.inpatient_overlap.sum()),
+                      "phantom": int(group_counts.loc["phantom", "overlap_flagged"]),
+                      "normal": int(group_counts.loc["none", "overlap_flagged"])}
+    overlap_counts["other"] = overlap_counts["total"] - overlap_counts["phantom"] - overlap_counts["normal"]
+    expected_counts = {"total": 253, "phantom": 134, "normal": 92, "other": 27}
+    passed = passed and overlap_counts == expected_counts
     hashes_after = {str(p.relative_to(ML_DIR)).replace("\\", "/"): sha256(p) for p in source_paths}
     if hashes_before != hashes_after:
         raise AssertionError("Input CSV or generator changed during feature computation.")
@@ -282,6 +296,8 @@ def run_feature_stage(artifact_dir: Path | None = None) -> dict:
         "forbidden_features_absent": not bool(FORBIDDEN_FEATURES.intersection(features.columns)),
         "source_sha256": hashes_after, "observation_window_days": int(metadata.observation_window_days.iloc[0]),
         "checks": checks, "passed_20pct_gate": passed,
+        "directed_overlap_verification": {"actual": overlap_counts, "expected": expected_counts,
+                                          "matches": overlap_counts == expected_counts},
         "inpatient_overlap_by_label_for_diagnostics_only": group_counts.to_dict(orient="index"),
         "duration_seconds": round(perf_counter() - start, 3),
         "notes": [
@@ -289,7 +305,8 @@ def run_feature_stage(artifact_dir: Path | None = None) -> dict:
             "Raw labels and claim_id are excluded before any feature computation.",
             "Raw patient_id/faskes_id define groups only; neither is a model input.",
             "Historical and peer features use the unlabeled full retrospective batch.",
-            "Inpatient intervals are half-open, cross-facility, and both members of a conflicting pair are flagged.",
+            "Directed half-open cross-facility inpatient overlap flags later admissions, with both flagged on same-date ties.",
+            "Overlap definition selected after comparing symmetric and directed definitions on the full labeled synthetic dataset; this is a data-informed design choice, not independent validation.",
             "No model is trained by the feature-stage command.",
         ],
     }
@@ -304,6 +321,8 @@ def run_feature_stage(artifact_dir: Path | None = None) -> dict:
         print(f"{check['check']:<43} | {actual:>11} | {expected:>19} | {deviation:>10} | {state}")
     print("\nOverlap counts by evaluation type (diagnostics only):")
     print(group_counts.to_string())
+    print(f"Directed overlap verification: {overlap_counts}; expected={expected_counts}")
+    print(f"Phantom enrichment among overlap flags: {checks[-1]['enrichment']:.3f}x (minimum 10x)")
     print(f"\nFeature stage duration: {report['duration_seconds']:.3f} seconds")
     print(f"SANITY GATE: {'PASS' if passed else 'STOP - deviation exceeds tolerance; no training allowed'}")
     return report
