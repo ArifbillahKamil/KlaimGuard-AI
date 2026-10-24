@@ -1,5 +1,7 @@
 # Checkpoint fitur — berhenti sebelum training
 
+> Riwayat checkpoint awal dengan definisi simetris. Sudah digantikan oleh keputusan Abil/Claude untuk overlap terarah dan pipeline telah selesai. Lihat [laporan Gate A terkini](GATE_A.md). Angka simetris lama disimpan pada [feature_sanity_symmetric.json](feature_sanity_symmetric.json); `feature_sanity.json` sekarang berisi hasil terarah yang disetujui.
+
 24 Oktober 2026. Seluruh data sintetis, bukan data peserta JKN. Hasil berikut bukan klaim performa dunia nyata.
 
 ## Ringkasan

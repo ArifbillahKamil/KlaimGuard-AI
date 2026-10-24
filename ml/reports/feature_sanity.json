@@ -277,7 +277,7 @@
       "overlap_flagged": 7
     }
   },
-  "duration_seconds": 1.27,
+  "duration_seconds": 1.301,
   "notes": [
     "All data are synthetic; this is not a real-world performance claim.",
     "Raw labels and claim_id are excluded before any feature computation.",

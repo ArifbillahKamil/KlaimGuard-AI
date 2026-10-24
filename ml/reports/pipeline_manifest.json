@@ -1,0 +1,87 @@
+{
+  "seed": 42,
+  "from_csv_without_cache": true,
+  "duration_seconds": 212.897,
+  "stage_durations_seconds": {
+    "features": 1.301,
+    "training": 28.223,
+    "evaluation_holdouts": 162.713,
+    "audit_shap_export": 19.462
+  },
+  "source_sha256": {
+    "data/claims_synthetic.csv": "f6dbf500f78a81370d742f7d33e5390661a0ab920792df9930bfcc22384e21fe",
+    "data/faskes.csv": "8de0f64cf9d495aa969228c76f10e70f8a201c0b4b852041758642813fb31c15",
+    "src/generate_claims.py": "85988f94bbfc325b4976188c964dcc1df7bb018475b15c8961a8f3569a8c1625"
+  },
+  "source_and_generator_unchanged": true,
+  "non_data_dashboard_files_unchanged": true,
+  "package_versions": {
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "scikit-learn": "1.9.1",
+    "xgboost": "3.4.1",
+    "shap": "0.54.1",
+    "pyarrow": "26.0.0"
+  },
+  "export_validation": {
+    "valid": true,
+    "n_exported_claims": 3000,
+    "n_faskes": 120,
+    "total_json_bytes": 2803318,
+    "file_bytes": {
+      "summary.json": 800,
+      "claims_flagged.json": 2723209,
+      "faskes_risk.json": 55635,
+      "model_report.json": 16453,
+      "feature_dictionary.json": 7221
+    },
+    "total_folder_bytes": 2803328,
+    "shap": {
+      "model_output": "Margin mentah (log-odds); satuannya bukan probabilitas",
+      "explainer": "shap.TreeExplainer; tree_path_dependent; model fold OOF yang menilai klaim terkait",
+      "n_claims": 62711,
+      "max_probability_reconstruction_error": 6.181844600661179e-07,
+      "reasons_selection": "Tiga kontribusi positif terbesar bila tersedia; jika kurang dari tiga, diisi kontribusi negatif nonnol dengan nilai absolut terbesar."
+    },
+    "duration_seconds": 19.462
+  },
+  "reproduction": {
+    "passed": true,
+    "reference": "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\ml\\artifacts",
+    "checks": {
+      "oof_predictions.npz:if_only": true,
+      "oof_predictions.npz:xgb_only": true,
+      "oof_predictions.npz:hybrid": true,
+      "oof_predictions.npz:fold": true,
+      "oof_predictions.npz:if_anomaly_score": true,
+      "oof_predictions.npz:claim_id": true,
+      "holdout_predictions.npz:phantom_xgb_only": true,
+      "holdout_predictions.npz:phantom_hybrid": true,
+      "holdout_predictions.npz:repeat_xgb_only": true,
+      "holdout_predictions.npz:repeat_hybrid": true,
+      "holdout_predictions.npz:upcoding_xgb_only": true,
+      "holdout_predictions.npz:upcoding_hybrid": true,
+      "holdout_predictions.npz:unbundling_xgb_only": true,
+      "holdout_predictions.npz:unbundling_hybrid": true,
+      "holdout_predictions.npz:inflated_xgb_only": true,
+      "holdout_predictions.npz:inflated_hybrid": true,
+      "holdout_predictions.npz:cloning_xgb_only": true,
+      "holdout_predictions.npz:cloning_hybrid": true,
+      "features.parquet": true,
+      "feature_metadata.parquet": true,
+      "shap_values.npy": true,
+      "shap_base_values.npy": true,
+      "export:summary.json": true,
+      "export:claims_flagged.json": true,
+      "export:faskes_risk.json": true,
+      "export:model_report.json": true,
+      "export:feature_dictionary.json": true
+    },
+    "predictions_and_shap_bitwise_identical": true,
+    "json_equal_except_runtime_metadata": true,
+    "excluded_json_runtime_fields": [
+      "generated_at",
+      "duration_seconds"
+    ]
+  }
+}

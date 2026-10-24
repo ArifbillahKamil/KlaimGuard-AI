@@ -1,0 +1,877 @@
+{
+  "config": {
+    "seed": 42,
+    "folds": 5,
+    "if_params": {
+      "n_estimators": 300,
+      "contamination": "auto",
+      "random_state": 42,
+      "n_jobs": 4
+    },
+    "xgb_params": {
+      "n_estimators": 400,
+      "max_depth": 5,
+      "learning_rate": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "eval_metric": "aucpr",
+      "tree_method": "hist",
+      "device": "cpu",
+      "n_jobs": 4,
+      "random_state": 42,
+      "objective": "binary:logistic",
+      "early_stopping_rounds": 30,
+      "inner_validation_fraction": 0.2,
+      "scale_pos_weight": "n_normal/n_fraud pada partisi training terkait"
+    }
+  },
+  "pr_auc": {
+    "if_only": 0.25868522411832295,
+    "xgb_only": 0.8043386324351786,
+    "hybrid": 0.7997979585437935
+  },
+  "at_budget": {
+    "2": {
+      "recall": {
+        "if_only": 0.17385057471264367,
+        "xgb_only": 0.44288793103448276,
+        "hybrid": 0.44396551724137934
+      },
+      "precision": {
+        "if_only": 0.3856573705179283,
+        "xgb_only": 0.9824701195219123,
+        "hybrid": 0.9848605577689243
+      },
+      "selected_claims": 1255
+    },
+    "5": {
+      "recall": {
+        "if_only": 0.32076149425287354,
+        "xgb_only": 0.7769396551724138,
+        "hybrid": 0.7701149425287356
+      },
+      "precision": {
+        "if_only": 0.28475765306122447,
+        "xgb_only": 0.6897321428571429,
+        "hybrid": 0.6836734693877551
+      },
+      "selected_claims": 3136
+    },
+    "10": {
+      "recall": {
+        "if_only": 0.5201149425287356,
+        "xgb_only": 0.8785919540229885,
+        "hybrid": 0.8728448275862069
+      },
+      "precision": {
+        "if_only": 0.2308673469387755,
+        "xgb_only": 0.38998724489795916,
+        "hybrid": 0.3874362244897959
+      },
+      "selected_claims": 6272
+    }
+  },
+  "per_type_recall_at_5": {
+    "phantom": {
+      "if_only": 0.17647058823529413,
+      "xgb_only": 0.6134453781512605,
+      "hybrid": 0.6323529411764706
+    },
+    "repeat": {
+      "if_only": 0.3172268907563025,
+      "xgb_only": 1.0,
+      "hybrid": 1.0
+    },
+    "upcoding": {
+      "if_only": 0.42678571428571427,
+      "xgb_only": 0.8446428571428571,
+      "hybrid": 0.8375
+    },
+    "unbundling": {
+      "if_only": 0.7202970297029703,
+      "xgb_only": 0.9826732673267327,
+      "hybrid": 0.9801980198019802
+    },
+    "inflated": {
+      "if_only": 0.18421052631578946,
+      "xgb_only": 0.37781954887218044,
+      "hybrid": 0.3684210526315789
+    },
+    "cloning": {
+      "if_only": 0.08928571428571429,
+      "xgb_only": 0.9642857142857143,
+      "hybrid": 0.9107142857142857
+    }
+  },
+  "lift_curve": [
+    {
+      "pct": 0,
+      "recall_hybrid": 0.0,
+      "recall_random": 0.0
+    },
+    {
+      "pct": 1,
+      "recall_hybrid": 0.2252155172413793,
+      "recall_random": 0.01
+    },
+    {
+      "pct": 2,
+      "recall_hybrid": 0.44396551724137934,
+      "recall_random": 0.02
+    },
+    {
+      "pct": 3,
+      "recall_hybrid": 0.5783045977011494,
+      "recall_random": 0.03
+    },
+    {
+      "pct": 4,
+      "recall_hybrid": 0.7004310344827587,
+      "recall_random": 0.04
+    },
+    {
+      "pct": 5,
+      "recall_hybrid": 0.7701149425287356,
+      "recall_random": 0.05
+    },
+    {
+      "pct": 6,
+      "recall_hybrid": 0.8081896551724138,
+      "recall_random": 0.06
+    },
+    {
+      "pct": 7,
+      "recall_hybrid": 0.8318965517241379,
+      "recall_random": 0.07
+    },
+    {
+      "pct": 8,
+      "recall_hybrid": 0.8448275862068966,
+      "recall_random": 0.08
+    },
+    {
+      "pct": 9,
+      "recall_hybrid": 0.8577586206896551,
+      "recall_random": 0.09
+    },
+    {
+      "pct": 10,
+      "recall_hybrid": 0.8728448275862069,
+      "recall_random": 0.1
+    },
+    {
+      "pct": 11,
+      "recall_hybrid": 0.8825431034482759,
+      "recall_random": 0.11
+    },
+    {
+      "pct": 12,
+      "recall_hybrid": 0.8904454022988506,
+      "recall_random": 0.12
+    },
+    {
+      "pct": 13,
+      "recall_hybrid": 0.9012212643678161,
+      "recall_random": 0.13
+    },
+    {
+      "pct": 14,
+      "recall_hybrid": 0.9076867816091954,
+      "recall_random": 0.14
+    },
+    {
+      "pct": 15,
+      "recall_hybrid": 0.913433908045977,
+      "recall_random": 0.15
+    },
+    {
+      "pct": 16,
+      "recall_hybrid": 0.9188218390804598,
+      "recall_random": 0.16
+    },
+    {
+      "pct": 17,
+      "recall_hybrid": 0.9242097701149425,
+      "recall_random": 0.17
+    },
+    {
+      "pct": 18,
+      "recall_hybrid": 0.9285201149425287,
+      "recall_random": 0.18
+    },
+    {
+      "pct": 19,
+      "recall_hybrid": 0.9321120689655172,
+      "recall_random": 0.19
+    },
+    {
+      "pct": 20,
+      "recall_hybrid": 0.9335488505747126,
+      "recall_random": 0.2
+    },
+    {
+      "pct": 21,
+      "recall_hybrid": 0.9371408045977011,
+      "recall_random": 0.21
+    },
+    {
+      "pct": 22,
+      "recall_hybrid": 0.9403735632183908,
+      "recall_random": 0.22
+    },
+    {
+      "pct": 23,
+      "recall_hybrid": 0.9421695402298851,
+      "recall_random": 0.23
+    },
+    {
+      "pct": 24,
+      "recall_hybrid": 0.9461206896551724,
+      "recall_random": 0.24
+    },
+    {
+      "pct": 25,
+      "recall_hybrid": 0.9489942528735632,
+      "recall_random": 0.25
+    },
+    {
+      "pct": 26,
+      "recall_hybrid": 0.9525862068965517,
+      "recall_random": 0.26
+    },
+    {
+      "pct": 27,
+      "recall_hybrid": 0.9547413793103449,
+      "recall_random": 0.27
+    },
+    {
+      "pct": 28,
+      "recall_hybrid": 0.9568965517241379,
+      "recall_random": 0.28
+    },
+    {
+      "pct": 29,
+      "recall_hybrid": 0.9586925287356322,
+      "recall_random": 0.29
+    },
+    {
+      "pct": 30,
+      "recall_hybrid": 0.9604885057471264,
+      "recall_random": 0.3
+    },
+    {
+      "pct": 31,
+      "recall_hybrid": 0.961566091954023,
+      "recall_random": 0.31
+    },
+    {
+      "pct": 32,
+      "recall_hybrid": 0.9622844827586207,
+      "recall_random": 0.32
+    },
+    {
+      "pct": 33,
+      "recall_hybrid": 0.9633620689655172,
+      "recall_random": 0.33
+    },
+    {
+      "pct": 34,
+      "recall_hybrid": 0.9637212643678161,
+      "recall_random": 0.34
+    },
+    {
+      "pct": 35,
+      "recall_hybrid": 0.9651580459770115,
+      "recall_random": 0.35
+    },
+    {
+      "pct": 36,
+      "recall_hybrid": 0.9658764367816092,
+      "recall_random": 0.36
+    },
+    {
+      "pct": 37,
+      "recall_hybrid": 0.9669540229885057,
+      "recall_random": 0.37
+    },
+    {
+      "pct": 38,
+      "recall_hybrid": 0.96875,
+      "recall_random": 0.38
+    },
+    {
+      "pct": 39,
+      "recall_hybrid": 0.9691091954022989,
+      "recall_random": 0.39
+    },
+    {
+      "pct": 40,
+      "recall_hybrid": 0.9691091954022989,
+      "recall_random": 0.4
+    },
+    {
+      "pct": 41,
+      "recall_hybrid": 0.9705459770114943,
+      "recall_random": 0.41
+    },
+    {
+      "pct": 42,
+      "recall_hybrid": 0.9705459770114943,
+      "recall_random": 0.42
+    },
+    {
+      "pct": 43,
+      "recall_hybrid": 0.9716235632183908,
+      "recall_random": 0.43
+    },
+    {
+      "pct": 44,
+      "recall_hybrid": 0.9723419540229885,
+      "recall_random": 0.44
+    },
+    {
+      "pct": 45,
+      "recall_hybrid": 0.9730603448275862,
+      "recall_random": 0.45
+    },
+    {
+      "pct": 46,
+      "recall_hybrid": 0.9741379310344828,
+      "recall_random": 0.46
+    },
+    {
+      "pct": 47,
+      "recall_hybrid": 0.975933908045977,
+      "recall_random": 0.47
+    },
+    {
+      "pct": 48,
+      "recall_hybrid": 0.9770114942528736,
+      "recall_random": 0.48
+    },
+    {
+      "pct": 49,
+      "recall_hybrid": 0.9780890804597702,
+      "recall_random": 0.49
+    },
+    {
+      "pct": 50,
+      "recall_hybrid": 0.9788074712643678,
+      "recall_random": 0.5
+    },
+    {
+      "pct": 51,
+      "recall_hybrid": 0.9795258620689655,
+      "recall_random": 0.51
+    },
+    {
+      "pct": 52,
+      "recall_hybrid": 0.9806034482758621,
+      "recall_random": 0.52
+    },
+    {
+      "pct": 53,
+      "recall_hybrid": 0.9813218390804598,
+      "recall_random": 0.53
+    },
+    {
+      "pct": 54,
+      "recall_hybrid": 0.9820402298850575,
+      "recall_random": 0.54
+    },
+    {
+      "pct": 55,
+      "recall_hybrid": 0.983117816091954,
+      "recall_random": 0.55
+    },
+    {
+      "pct": 56,
+      "recall_hybrid": 0.983117816091954,
+      "recall_random": 0.56
+    },
+    {
+      "pct": 57,
+      "recall_hybrid": 0.9834770114942529,
+      "recall_random": 0.57
+    },
+    {
+      "pct": 58,
+      "recall_hybrid": 0.9838362068965517,
+      "recall_random": 0.58
+    },
+    {
+      "pct": 59,
+      "recall_hybrid": 0.9849137931034483,
+      "recall_random": 0.59
+    },
+    {
+      "pct": 60,
+      "recall_hybrid": 0.9859913793103449,
+      "recall_random": 0.6
+    },
+    {
+      "pct": 61,
+      "recall_hybrid": 0.9870689655172413,
+      "recall_random": 0.61
+    },
+    {
+      "pct": 62,
+      "recall_hybrid": 0.9881465517241379,
+      "recall_random": 0.62
+    },
+    {
+      "pct": 63,
+      "recall_hybrid": 0.9899425287356322,
+      "recall_random": 0.63
+    },
+    {
+      "pct": 64,
+      "recall_hybrid": 0.9906609195402298,
+      "recall_random": 0.64
+    },
+    {
+      "pct": 65,
+      "recall_hybrid": 0.9910201149425287,
+      "recall_random": 0.65
+    },
+    {
+      "pct": 66,
+      "recall_hybrid": 0.9910201149425287,
+      "recall_random": 0.66
+    },
+    {
+      "pct": 67,
+      "recall_hybrid": 0.9920977011494253,
+      "recall_random": 0.67
+    },
+    {
+      "pct": 68,
+      "recall_hybrid": 0.9931752873563219,
+      "recall_random": 0.68
+    },
+    {
+      "pct": 69,
+      "recall_hybrid": 0.9931752873563219,
+      "recall_random": 0.69
+    },
+    {
+      "pct": 70,
+      "recall_hybrid": 0.9935344827586207,
+      "recall_random": 0.7
+    },
+    {
+      "pct": 71,
+      "recall_hybrid": 0.9942528735632183,
+      "recall_random": 0.71
+    },
+    {
+      "pct": 72,
+      "recall_hybrid": 0.9946120689655172,
+      "recall_random": 0.72
+    },
+    {
+      "pct": 73,
+      "recall_hybrid": 0.9946120689655172,
+      "recall_random": 0.73
+    },
+    {
+      "pct": 74,
+      "recall_hybrid": 0.9946120689655172,
+      "recall_random": 0.74
+    },
+    {
+      "pct": 75,
+      "recall_hybrid": 0.9949712643678161,
+      "recall_random": 0.75
+    },
+    {
+      "pct": 76,
+      "recall_hybrid": 0.9949712643678161,
+      "recall_random": 0.76
+    },
+    {
+      "pct": 77,
+      "recall_hybrid": 0.9949712643678161,
+      "recall_random": 0.77
+    },
+    {
+      "pct": 78,
+      "recall_hybrid": 0.9953304597701149,
+      "recall_random": 0.78
+    },
+    {
+      "pct": 79,
+      "recall_hybrid": 0.9953304597701149,
+      "recall_random": 0.79
+    },
+    {
+      "pct": 80,
+      "recall_hybrid": 0.9960488505747126,
+      "recall_random": 0.8
+    },
+    {
+      "pct": 81,
+      "recall_hybrid": 0.9964080459770115,
+      "recall_random": 0.81
+    },
+    {
+      "pct": 82,
+      "recall_hybrid": 0.9964080459770115,
+      "recall_random": 0.82
+    },
+    {
+      "pct": 83,
+      "recall_hybrid": 0.9971264367816092,
+      "recall_random": 0.83
+    },
+    {
+      "pct": 84,
+      "recall_hybrid": 0.9978448275862069,
+      "recall_random": 0.84
+    },
+    {
+      "pct": 85,
+      "recall_hybrid": 0.9978448275862069,
+      "recall_random": 0.85
+    },
+    {
+      "pct": 86,
+      "recall_hybrid": 0.9978448275862069,
+      "recall_random": 0.86
+    },
+    {
+      "pct": 87,
+      "recall_hybrid": 0.9982040229885057,
+      "recall_random": 0.87
+    },
+    {
+      "pct": 88,
+      "recall_hybrid": 0.9982040229885057,
+      "recall_random": 0.88
+    },
+    {
+      "pct": 89,
+      "recall_hybrid": 0.9982040229885057,
+      "recall_random": 0.89
+    },
+    {
+      "pct": 90,
+      "recall_hybrid": 0.9985632183908046,
+      "recall_random": 0.9
+    },
+    {
+      "pct": 91,
+      "recall_hybrid": 0.9985632183908046,
+      "recall_random": 0.91
+    },
+    {
+      "pct": 92,
+      "recall_hybrid": 0.9985632183908046,
+      "recall_random": 0.92
+    },
+    {
+      "pct": 93,
+      "recall_hybrid": 0.9989224137931034,
+      "recall_random": 0.93
+    },
+    {
+      "pct": 94,
+      "recall_hybrid": 0.9992816091954023,
+      "recall_random": 0.94
+    },
+    {
+      "pct": 95,
+      "recall_hybrid": 0.9992816091954023,
+      "recall_random": 0.95
+    },
+    {
+      "pct": 96,
+      "recall_hybrid": 0.9992816091954023,
+      "recall_random": 0.96
+    },
+    {
+      "pct": 97,
+      "recall_hybrid": 0.9996408045977011,
+      "recall_random": 0.97
+    },
+    {
+      "pct": 98,
+      "recall_hybrid": 0.9996408045977011,
+      "recall_random": 0.98
+    },
+    {
+      "pct": 99,
+      "recall_hybrid": 1.0,
+      "recall_random": 0.99
+    },
+    {
+      "pct": 100,
+      "recall_hybrid": 1.0,
+      "recall_random": 1.0
+    }
+  ],
+  "pr_auc_definition": "average_precision_score (AP)",
+  "budget_rounding": "ceil(N * pct / 100); skor sama diurutkan stabil menurut baris sumber",
+  "holdout": {
+    "phantom": {
+      "if_only": 0.17647058823529413,
+      "xgb_only": 0.058823529411764705,
+      "hybrid": 0.07142857142857142
+    },
+    "repeat": {
+      "if_only": 0.3172268907563025,
+      "xgb_only": 0.16596638655462184,
+      "hybrid": 0.40336134453781514
+    },
+    "upcoding": {
+      "if_only": 0.42678571428571427,
+      "xgb_only": 0.13035714285714287,
+      "hybrid": 0.11964285714285715
+    },
+    "unbundling": {
+      "if_only": 0.7202970297029703,
+      "xgb_only": 0.04950495049504951,
+      "hybrid": 0.1707920792079208
+    },
+    "inflated": {
+      "if_only": 0.18421052631578946,
+      "xgb_only": 0.06766917293233082,
+      "hybrid": 0.07330827067669173
+    },
+    "cloning": {
+      "if_only": 0.08928571428571429,
+      "xgb_only": 0.03571428571428571,
+      "hybrid": 0.020833333333333332
+    }
+  },
+  "holdout_protocol": {
+    "supervised_type_exclusion": "Semua baris T dikeluarkan dari outer train sebelum inner split; baris normal tetap tersedia.",
+    "evaluation": "Lima outer fold yang sama; prediksi uji digabung; top 5% seluruh cohort; recall dihitung dalam jenis T.",
+    "unsupervised": "Isolation Forest dan referensi fitur tanpa label tidak berubah dan telah melihat kovariat T; belum menguji jenis baru secara induktif."
+  },
+  "notes": [
+    "Seluruh data sintetis, bukan data peserta JKN. Angka performa bukan klaim performa dunia nyata.",
+    "PR-AUC dilaporkan sebagai average precision (AP); budget memakai ceil(N*pct/100). Tidak ada tuning pada fold uji.",
+    "Prediksi supervised adalah OOF 5-fold; early stopping memakai validasi internal train, lalu model dilatih ulang pada seluruh outer train dengan jumlah tree terpilih.",
+    "Isolation Forest, median peer, nearest-neighbor dan hitungan riwayat memakai seluruh batch tanpa label: evaluasi transduktif, bukan generalisasi prospektif atau ke faskes baru.",
+    "Definisi overlap terarah dipilih setelah membandingkan dua definisi pada data penuh; ini keputusan desain berbasis data dan membatasi independensi evaluasi.",
+    "Hold-out membuang satu jenis fraud hanya dari train supervised. Isolation Forest tetap melihat kovariat tanpa label dari jenis itu sesuai brief.",
+    "Split per klaim dapat memisahkan klaim berelasi ke fold berbeda. Evaluasi kelompok pasien/faskes dan waktu masih diperlukan.",
+    "Cloning sintetis memiliki jitter sangat kecil dan dapat terlalu mudah; phantom memiliki sinyal lemah. Pola dugaan adalah heuristik, bukan label atau tuduhan.",
+    "Estimasi kelebihan bayar adalah selisih positif biaya terhadap median peer; bukan kerugian terkonfirmasi. Keputusan akhir ada pada auditor.",
+    "SHAP berasal dari model fold yang menilai klaim; kontribusi memakai satuan log-odds dan lolos rekonstruksi probabilitas OOF."
+  ],
+  "duration_seconds": 162.713,
+  "feature_importance": [
+    {
+      "feature": "if_score",
+      "label": "Persentil anomali Isolation Forest",
+      "importance": 1.0224830631739772,
+      "mean_abs_shap": 1.0224830631739772,
+      "gain": 0.11681701914542578
+    },
+    {
+      "feature": "nn_dist",
+      "label": "Kemiripan komponen biaya",
+      "importance": 0.655338975941436,
+      "mean_abs_shap": 0.655338975941436,
+      "gain": 0.06781865264698028
+    },
+    {
+      "feature": "fk_loo_ratio",
+      "label": "Kecenderungan biaya faskes",
+      "importance": 0.5542600947754723,
+      "mean_abs_shap": 0.5542600947754723,
+      "gain": 0.04080169429107136
+    },
+    {
+      "feature": "proc_peer_ratio",
+      "label": "Rasio biaya vs peer prosedur",
+      "importance": 0.2931188980926066,
+      "mean_abs_shap": 0.2931188980926066,
+      "gain": 0.04966781045762976
+    },
+    {
+      "feature": "dx_peer_ratio",
+      "label": "Rasio biaya vs peer diagnosis",
+      "importance": 0.21324037432744689,
+      "mean_abs_shap": 0.21324037432744689,
+      "gain": 0.03092370177489554
+    },
+    {
+      "feature": "los_ratio",
+      "label": "Durasi vs median diagnosis",
+      "importance": 0.20556639691700268,
+      "mean_abs_shap": 0.20556639691700268,
+      "gain": 0.030371783426066296
+    },
+    {
+      "feature": "fk_day_burst",
+      "label": "Lonjakan klaim harian faskes",
+      "importance": 0.18387518760640556,
+      "mean_abs_shap": 0.18387518760640556,
+      "gain": 0.016604783319802325
+    },
+    {
+      "feature": "pair_rarity",
+      "label": "Kelangkaan diagnosis–tindakan",
+      "importance": 0.17948735567540058,
+      "mean_abs_shap": 0.17948735567540058,
+      "gain": 0.06481429460620045
+    },
+    {
+      "feature": "same_pat_fk_3d",
+      "label": "Klaim berdekatan dalam 3 hari",
+      "importance": 0.14449416391357955,
+      "mean_abs_shap": 0.14449416391357955,
+      "gain": 0.1229511446965651
+    },
+    {
+      "feature": "comp_share_room",
+      "label": "Porsi komponen kamar",
+      "importance": 0.13226863116910142,
+      "mean_abs_shap": 0.13226863116910142,
+      "gain": 0.017461634973725555
+    },
+    {
+      "feature": "comp_share_procedure",
+      "label": "Porsi komponen tindakan",
+      "importance": 0.11532021535730544,
+      "mean_abs_shap": 0.11532021535730544,
+      "gain": 0.017425562662272708
+    },
+    {
+      "feature": "faskes_class",
+      "label": "Kelas faskes",
+      "importance": 0.11151955118933154,
+      "mean_abs_shap": 0.11151955118933154,
+      "gain": 0.030109300417173097
+    },
+    {
+      "feature": "comp_ratio_drug",
+      "label": "Rasio komponen obat",
+      "importance": 0.10054475721039047,
+      "mean_abs_shap": 0.10054475721039047,
+      "gain": 0.025397586476250938
+    },
+    {
+      "feature": "comp_share_labrad",
+      "label": "Porsi komponen laboratorium/radiologi",
+      "importance": 0.09792484571408448,
+      "mean_abs_shap": 0.09792484571408448,
+      "gain": 0.015299994703125163
+    },
+    {
+      "feature": "repeat_14d",
+      "label": "Pengulangan dalam 14 hari",
+      "importance": 0.07740997830503113,
+      "mean_abs_shap": 0.07740997830503113,
+      "gain": 0.040640438287634945
+    },
+    {
+      "feature": "severity",
+      "label": "Tingkat keparahan",
+      "importance": 0.0765278388238212,
+      "mean_abs_shap": 0.0765278388238212,
+      "gain": 0.0259877519754989
+    },
+    {
+      "feature": "comp_share_drug",
+      "label": "Porsi komponen obat",
+      "importance": 0.07361596434532519,
+      "mean_abs_shap": 0.07361596434532519,
+      "gain": 0.016060072331170527
+    },
+    {
+      "feature": "inpatient_overlap",
+      "label": "Rawat inap tumpang tindih terarah",
+      "importance": 0.06279267158631181,
+      "mean_abs_shap": 0.06279267158631181,
+      "gain": 0.08759850200846106
+    },
+    {
+      "feature": "comp_ratio_other",
+      "label": "Rasio komponen lainnya",
+      "importance": 0.06153706237697257,
+      "mean_abs_shap": 0.06153706237697257,
+      "gain": 0.01294992382444193
+    },
+    {
+      "feature": "comp_ratio_labrad",
+      "label": "Rasio komponen laboratorium/radiologi",
+      "importance": 0.06010481496809442,
+      "mean_abs_shap": 0.06010481496809442,
+      "gain": 0.01220767116887041
+    },
+    {
+      "feature": "ratio_gap",
+      "label": "Ketidakseimbangan rasio diagnosis–prosedur",
+      "importance": 0.05804184015167737,
+      "mean_abs_shap": 0.05804184015167737,
+      "gain": 0.029063022873696515
+    },
+    {
+      "feature": "comp_share_other",
+      "label": "Porsi komponen lainnya",
+      "importance": 0.0547034595970163,
+      "mean_abs_shap": 0.0547034595970163,
+      "gain": 0.013547682822031459
+    },
+    {
+      "feature": "faskes_ownership",
+      "label": "Kepemilikan faskes",
+      "importance": 0.051418495673739795,
+      "mean_abs_shap": 0.051418495673739795,
+      "gain": 0.02871640669672083
+    },
+    {
+      "feature": "comp_ratio_procedure",
+      "label": "Rasio komponen tindakan",
+      "importance": 0.04867967552237924,
+      "mean_abs_shap": 0.04867967552237924,
+      "gain": 0.012641223398753856
+    },
+    {
+      "feature": "patient_n_claims",
+      "label": "Jumlah klaim pasien",
+      "importance": 0.04809138355993621,
+      "mean_abs_shap": 0.04809138355993621,
+      "gain": 0.019974085140495104
+    },
+    {
+      "feature": "comp_ratio_room",
+      "label": "Rasio komponen kamar",
+      "importance": 0.04256039184351462,
+      "mean_abs_shap": 0.04256039184351462,
+      "gain": 0.012738360703378295
+    },
+    {
+      "feature": "patient_once",
+      "label": "Pasien muncul sekali",
+      "importance": 0.0049529717468913895,
+      "mean_abs_shap": 0.0049529717468913895,
+      "gain": 0.024539371569755532
+    },
+    {
+      "feature": "service_type",
+      "label": "Tipe layanan",
+      "importance": 0.0021048619494576475,
+      "mean_abs_shap": 0.0021048619494576475,
+      "gain": 0.01687052360190628
+    }
+  ],
+  "feature_importance_definition": "importance=rata-rata absolut SHAP OOF dalam log-odds; gain=rata-rata gain ternormalisasi pada lima model hybrid",
+  "shap": {
+    "model_output": "Margin mentah (log-odds); satuannya bukan probabilitas",
+    "explainer": "shap.TreeExplainer; tree_path_dependent; model fold OOF yang menilai klaim terkait",
+    "n_claims": 62711,
+    "max_probability_reconstruction_error": 6.181844600661179e-07,
+    "reasons_selection": "Tiga kontribusi positif terbesar bila tersedia; jika kurang dari tiga, diisi kontribusi negatif nonnol dengan nilai absolut terbesar."
+  },
+  "leakage_audit": {
+    "triggered_by_high_metrics": false,
+    "forbidden_model_features": [],
+    "label_leakage_detected": false,
+    "full_dataset_features_equal_after_label_removal": true
+  }
+}

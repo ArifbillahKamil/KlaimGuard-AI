@@ -2,13 +2,13 @@
 
 **Semua data sintetis, bukan data peserta JKN. Angka performa bukan klaim performa dunia nyata. Skor nantinya hanya rekomendasi prioritas; keputusan akhir tetap pada auditor manusia.**
 
-Status saat ini: **sanity gate fitur terarah lolos 13/13; training dilanjutkan**. Terdapat 253 klaim overlap, terdiri atas 134 phantom, 92 normal dan 27 jenis lain. Proporsi phantom 52,964%, enrichment terhadap base rate phantom 69,778x. Tujuh unit test lolos.
+Status: **Prompt 1 selesai, berhenti di Gate A dan menunggu konfirmasi Abil**. Pipeline benar-benar dijalankan dari CSV hingga lima JSON. Lihat [laporan Gate A lengkap](reports/GATE_A.md), [snapshot metrik](reports/model_report.json), dan [bukti reproduksi](reports/pipeline_manifest.json).
 
 Keputusan Abil dan Claude: ekspektasi lama pada definisi simetris diganti karena kedua klaim dalam pasangan ikut tertandai. Definisi terarah dipilih **setelah membandingkan dua definisi pada data penuh**, bukan sebelum melihat data. Ini keputusan desain berbasis data yang membatasi independensi evaluasi dan akan dicantumkan pada laporan model. Dataset dan generator tidak diubah. [Laporan penghentian awal](reports/FEATURE_SANITY.md) disimpan sebagai riwayat.
 
-## Lingkungan dan menjalankan tahap fitur
+## Lingkungan dan menjalankan pipeline
 
-Python 3.12.6 digunakan pada sesi ini; minimal Python 3.10. Versi terpasang dipin bersama dependensinya dalam `requirements.txt`.
+Gunakan **Python 3.12+** untuk requirements yang dipin pada hasil ini; sesi memakai Python 3.12.6. Batas awal brief adalah Python >=3.10, tetapi metadata NumPy 2.5.4, XGBoost 3.4.1, dan SHAP 0.54.1 yang terpasang mensyaratkan >=3.12. Versi terpasang dipin bersama dependensinya dalam `requirements.txt`.
 
 ```powershell
 cd "C:\Users\diamo\Documents\VSC\Hackaton\BPJS Healtkathon\ml"
@@ -16,10 +16,20 @@ $env:PYTHONUTF8 = "1"
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
-.\.venv\Scripts\python.exe -m src.features
+.\.venv\Scripts\python.exe run_all.py
 ```
 
-Tahap fitur membaca CSV yang sudah tersedia dan tidak menjalankan generator. Exit code bukan nol berarti sanity check di luar toleransi dan training harus ditahan. Paket utama yang berhasil diimpor: NumPy 2.5.4, pandas 3.1.0, scikit-learn 1.9.1, XGBoost 3.4.1, SHAP 0.54.1, PyArrow 26.0.0.
+Pipeline membaca CSV yang sudah tersedia, menghitung ulang seluruh tahap tanpa cache, dan tidak menjalankan generator. Sanity gate yang gagal menghentikan proses sebelum training. Paket utama yang benar-benar digunakan: NumPy 2.5.4, pandas 3.1.0, scikit-learn 1.9.1, XGBoost 3.4.1, SHAP 0.54.1, PyArrow 26.0.0. `pip check` lolos; seluruh dependensi terpasang dipin.
+
+Run penuh baru memakai direktori artefak terpisah dan dibandingkan dengan run per tahap sebelumnya:
+
+```powershell
+.\.venv\Scripts\python.exe run_all.py --artifact-dir artifacts/final_run --verify-against artifacts
+```
+
+Run final itu selesai dalam **212,897 detik**, sekitar 3 menit 33 detik, pada mesin sesi ini. Run penuh sebelumnya selesai dalam 197,553 detik; perbedaan durasi bergantung pada beban mesin. **27 pembandingan eksak lolos**: fitur, prediksi OOF, hold-out, dan SHAP identik bit demi bit; JSON sama selain timestamp/durasi. Pembandingan membutuhkan run referensi; perintah normal `run_all.py` tidak membutuhkan referensi atau cache. Reproduksibilitas lintas OS/versi paket tidak diklaim bitwise.
+
+Untuk menjalankan tahap terpisah: `python -m src.features`, `python -m src.train`, `python -m src.evaluate`, `python -m src.export`, `python -m src.validate_export`. Regenerasi laporan setelah run dengan manifest reproduksi: `python -m src.report --artifact-dir artifacts/final_run`. Gunakan Python venv pada contoh di atas.
 
 ## Fitur: apa dan mengapa
 
@@ -43,18 +53,58 @@ Matriks berisi 23 fitur numerik dan empat kategorikal yang dikodekan, total 27 k
 | `fk_loo_ratio` | Rata-rata `dx_peer_ratio` faskes dengan klaim sendiri dikeluarkan. Singleton diisi 1. |
 | Kategorikal | Kelas D/C/B/A = 1/2/3/4; RJTL/RITL = 0/1; keparahan I/II/III = 1/2/3; Pemerintah/Swasta = 0/1. |
 
-Median peer dan hitungan riwayat menggunakan batch retrospektif tanpa label sesuai brief. Evaluasi model nanti perlu menyebut sifat transduktif ini; belum membuktikan performa pada klaim masa depan atau faskes baru.
+Median peer, tetangga dan hitungan riwayat menggunakan batch retrospektif tanpa label sesuai brief. Bersama IF yang dilatih pada seluruh batch, evaluasi bersifat transduktif; belum membuktikan performa pada klaim masa depan atau faskes baru.
 
-## Hasil nyata sejauh ini
+## Model, alur data, dan alasan pemilihan
 
-- Lima pengujian fitur lolos, termasuk anti-label-leakage, definisi jarak relatif, overlap dua arah, batas tanggal, median nol, dan leave-one-out.
-- 62.711 klaim menghasilkan 27 fitur berhingga.
-- Durasi tahap fitur 1,236 detik, bukan durasi pipeline lengkap.
-- CSV dan `generate_claims.py` tetap sama berdasarkan SHA256 sebelum/sesudah proses.
-- Satu sanity check di luar toleransi, sehingga tidak ada pelatihan, prediksi OOF, hold-out, perhitungan SHAP, maupun ekspor JSON aktual.
+`CSV sintetis -> 27 fitur -> RobustScaler + Isolation Forest -> XGBoost OOF -> SHAP fold terkait -> aturan dugaan -> 5 JSON statis`.
 
-Belum tersedia `train.py`, `evaluate.py`, `export.py`, atau `run_all.py`. Model belum dilatih; Gate A belum tercapai. Dashboard dan JSON contoh tidak diubah.
+- IF memakai 23 fitur numerik, 300 tree, contamination auto, seed 42, tanpa label. Keluaran adalah persentil `-score_samples`.
+- XGBoost memakai semua 27 fitur; hybrid menambahkan persentil IF sebagai fitur ke-28. CPU, maksimum 400 tree, depth 5, learning rate 0,05, subsample/colsample 0,8, `scale_pos_weight=n_normal/n_fraud` pada partisi train terkait.
+- Lima fold distratifikasi jenis fraud. Early stopping 30 putaran hanya melihat validasi internal 20% outer train; setelah tree count dipilih, model direfit pada seluruh outer train. Fold uji tidak dipakai fit atau pemilihan tree count. Tidak ada tuning berdasarkan hasil uji.
+- Enam hold-out memakai fold sama; jenis T dibuang sebelum inner split dan refit supervised. Semua prediksi uji digabung lalu top 5% dipilih. IF dan referensi tanpa label tetap melihat kovariat T, sehingga ini bukan uji induktif atas jenis yang benar-benar belum terlihat.
+- SHAP memakai `TreeExplainer` dan model hybrid fold yang menilai klaim. Output berupa log-odds, bukan persen probabilitas. Rekonstruksi probabilitas OOF maksimum meleset 6,18e-7.
 
-## Artefak
+## Hasil aktual
 
-`artifacts/` diabaikan Git dan berisi matriks fitur Parquet, metadata median peer, serta JSON sanity check. `reports/` menyimpan snapshot hasil checkpoint untuk review. Daftar kolom, whitelist input, komposisi overlap, dan hash sumber lengkap tercantum dalam `reports/feature_sanity.json`.
+| Varian | PR-AUC / AP | Recall@2% | Recall@5% | Recall@10% |
+| --- | ---: | ---: | ---: | ---: |
+| IF | 0,258685 | 17,39% | 32,08% | 52,01% |
+| XGBoost | 0,804339 | 44,29% | 77,69% | 87,86% |
+| Hybrid | 0,799798 | 44,40% | 77,01% | 87,28% |
+
+Hybrid sedikit lebih rendah pada evaluasi biasa. Pada hold-out, hybrid membantu untuk repeat dan unbundling dibanding XGBoost, tetapi tidak selalu lebih baik untuk jenis lain. IF sendiri sering lebih tinggi pada hold-out. Inflated lebih sulit pada evaluasi biasa daripada phantom. Tabel lengkap per jenis, precision, hold-out, gain, dan mean |SHAP| ada di [laporan Gate A](reports/GATE_A.md). PR-AUC memakai average precision (AP); definisinya dicatat secara konsisten dalam JSON dan laporan.
+
+Sanity terarah **13/13 lolos**: 253 overlap = 134 phantom + 92 normal + 27 lain; proporsi phantom 52,964%, enrichment 69,778x. Sepuluh unit test lolos, termasuk klaim masuk lebih awal tidak ditandai, tie tanggal menandai keduanya, batas discharge, anti-label-leakage, budget dan pola heuristik.
+
+## Skor, alasan dan aturan dugaan
+
+Skor dashboard adalah persentil peringkat probabilitas hybrid OOF (0–100, integer), bukan probabilitas fraud. Tie diurutkan stabil menurut baris sumber, tanpa label. Tier tinggi adalah top 3%, menengah top 3–10%; jumlah dibulatkan ke atas (1.882 tinggi, 4.390 menengah, 56.439 rendah). Pembulatan skor bisa membuat angka sama berada pada tier berbeda; gunakan `risk_tier` eksplisit.
+
+Tiga alasan dipilih dari kontribusi SHAP positif terbesar; jika kurang dari tiga, kontribusi negatif nonnol terbesar mengisi sisanya dengan `direction` yang benar. Teks menyatakan nilai fitur aktual, termasuk ketika kondisi biner tidak ada. Kontribusi SHAP bukan sebab-akibat atau bukti pelanggaran.
+
+Pola adalah **heuristik tanpa label**, maksimum dua, diurutkan berdasarkan |SHAP| fitur terkait:
+
+- `nn_dist < 0.015`: Cloning (penjiplakan klaim).
+- `repeat_14d == 1`: Repeat billing (klaim berulang).
+- `same_pat_fk_3d >= 1` dan `dx_peer_ratio < 0.8`: Services unbundling / fragmentation.
+- `pair_rarity >= 0.9` atau `ratio_gap >= 1.6`: Manipulasi diagnosis dan/atau tindakan (upcoding).
+- `dx_peer_ratio >= 1.25`: Inflated bills (penggelembungan tagihan).
+- `inpatient_overlap == 1` atau `patient_once == 1` dan `fk_day_burst >= 3`: Phantom billing (klaim palsu).
+
+Median peer diekspor dengan pembulatan rupiah; estimasi selisih = `max(0, claim_total - peer_median)` memakai median yang diekspor. Estimasi bukan kerugian terkonfirmasi. `patient_ref` adalah `PX-` + enam karakter SHA1, bukan ID pasien asli dan bukan jaminan anonimitas produksi.
+
+## Audit dan batasan
+
+Audit tetap dijalankan meskipun pemicu AP hybrid >0,99 atau hampir semua jenis recall >=95% tidak aktif. Pada seluruh 62.711 baris, menghapus/mengganti label dan `claim_id` tidak mengubah fitur. Tidak ada `fraud_label`, `fraud_type`, turunannya dari label, atau ID mentah dalam fitur model; metadata label hanya untuk stratifikasi/evaluasi dan `eval` pada ekspor.
+
+Seluruh sumber dan generator sama berdasarkan SHA256. Split per klaim dapat berbagi pasien/faskes atau klaim berelasi lintas fold. IF dan fitur referensi memakai batch penuh tanpa label. Definisi overlap dipilih setelah membandingkan dua definisi pada data penuh. Karena itu, skor OOF ini bukan validasi prospektif independen; evaluasi per waktu/kelompok dan data dunia nyata berizin tetap diperlukan. Data disuntikkan dengan pola yang diketahui; cloning ber-jitter kecil dapat terlalu mudah.
+
+## Artefak dan batas Gate A
+
+- `src/`: fitur, training, evaluasi/hold-out, audit, SHAP/ekspor, validasi dan pembuat laporan.
+- `artifacts/`: fitur Parquet, IF/scaler, 10 model fold, OOF dan hold-out NPZ, SHAP NPY, manifest dan audit; diabaikan Git dan tidak di-deploy.
+- `reports/`: laporan Gate A, snapshot metrik, sanity terarah, manifest reproduksi, audit dan riwayat simetris.
+- `web/public/data/`: lima JSON aktual tervalidasi, 3.000 klaim, 120 faskes, sekitar 2,80 MB (<6 MB). Summary/faskes mencakup seluruh cohort; antrean hanya 3.000 teratas. Matriks evaluasi UI tidak boleh diklaim mewakili seluruh dataset bila hanya memakai subset ini.
+
+Seluruh berkas dashboard di luar lima JSON tetap sama. **QA integrasi dashboard, pembaruan screenshot/dokumentasi frontend dan deploy belum dijalankan; menunggu konfirmasi Gate A.**

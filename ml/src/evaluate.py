@@ -50,7 +50,7 @@ def score_report(claims, predictions: dict) -> dict:
              "recall_random": pct / 100.0} for pct in range(101)]
     return {"pr_auc": pr_auc, "at_budget": at_budget, "per_type_recall_at_5": per_type,
             "lift_curve": lift, "pr_auc_definition": "average_precision_score (AP)",
-            "budget_rounding": "ceil(N * pct / 100), stable ties by source row order"}
+            "budget_rounding": "ceil(N * pct / 100); skor sama diurutkan stabil menurut baris sumber"}
 
 
 def run_evaluation(artifact_dir: Path | None = None) -> dict:
@@ -93,9 +93,9 @@ def run_evaluation(artifact_dir: Path | None = None) -> dict:
         print(f"Holdout {fraud_type} recall@5%: {holdout[fraud_type]}", flush=True)
     report["holdout"] = holdout
     report["holdout_protocol"] = {
-        "supervised_type_exclusion": "All rows of T removed from outer training before inner splitting; normal rows retained.",
-        "evaluation": "Same 5 outer folds; pool all held-out predictions; top 5% of the full cohort; recall within type T.",
-        "unsupervised": "Isolation Forest and unlabeled full-cohort feature references are unchanged and have seen covariates of T; not an inductively unseen-type test.",
+        "supervised_type_exclusion": "Semua baris T dikeluarkan dari outer train sebelum inner split; baris normal tetap tersedia.",
+        "evaluation": "Lima outer fold yang sama; prediksi uji digabung; top 5% seluruh cohort; recall dihitung dalam jenis T.",
+        "unsupervised": "Isolation Forest dan referensi fitur tanpa label tidak berubah dan telah melihat kovariat T; belum menguji jenis baru secara induktif.",
     }
     report["notes"] = [
         "Seluruh data sintetis, bukan data peserta JKN. Angka performa bukan klaim performa dunia nyata.",

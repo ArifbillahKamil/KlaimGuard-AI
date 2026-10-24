@@ -162,10 +162,10 @@ def compute_oof_shap(x: pd.DataFrame, artifact_dir: Path, folds: np.ndarray,
         raise AssertionError("Non-finite SHAP values.")
     np.save(artifact_dir / "shap_values.npy", values)
     np.save(artifact_dir / "shap_base_values.npy", bases)
-    return values, {"model_output": "raw margin (log-odds), not probability units",
-                    "explainer": "shap.TreeExplainer; tree_path_dependent; corresponding OOF fold model",
+    return values, {"model_output": "Margin mentah (log-odds); satuannya bukan probabilitas",
+                    "explainer": "shap.TreeExplainer; tree_path_dependent; model fold OOF yang menilai klaim terkait",
                     "n_claims": len(x), "max_probability_reconstruction_error": max_error,
-                    "reasons_selection": "Three largest positive contributions if available; fill with largest absolute nonzero negative contributions only when fewer than three positives."}
+                    "reasons_selection": "Tiga kontribusi positif terbesar bila tersedia; jika kurang dari tiga, diisi kontribusi negatif nonnol dengan nilai absolut terbesar."}
 
 
 def run_export(artifact_dir: Path | None = None, output_dir: Path | None = None) -> dict:
@@ -177,6 +177,14 @@ def run_export(artifact_dir: Path | None = None, output_dir: Path | None = None)
     metadata = pd.read_parquet(artifact_dir / "feature_metadata.parquet")
     training = json.loads((artifact_dir / "training_manifest.json").read_text(encoding="utf-8"))
     report = json.loads((artifact_dir / "model_report.json").read_text(encoding="utf-8"))
+    # Free explanatory text in deployed JSON follows the Indonesian contract.
+    report["config"]["xgb_params"]["scale_pos_weight"] = "n_normal/n_fraud pada partisi training terkait"
+    report["budget_rounding"] = "ceil(N * pct / 100); skor sama diurutkan stabil menurut baris sumber"
+    report["holdout_protocol"] = {
+        "supervised_type_exclusion": "Semua baris T dikeluarkan dari outer train sebelum inner split; baris normal tetap tersedia.",
+        "evaluation": "Lima outer fold yang sama; prediksi uji digabung; top 5% seluruh cohort; recall dihitung dalam jenis T.",
+        "unsupervised": "Isolation Forest dan referensi fitur tanpa label tidak berubah dan telah melihat kovariat T; belum menguji jenis baru secara induktif.",
+    }
     with np.load(artifact_dir / "oof_predictions.npz", allow_pickle=False) as saved:
         if_score, hybrid_probability, folds = saved["if_only"], saved["hybrid"], saved["fold"]
     x = features.astype(np.float32).assign(if_score=if_score.astype(np.float32))
@@ -188,11 +196,13 @@ def run_export(artifact_dir: Path | None = None, output_dir: Path | None = None)
         {"feature": name, "label": LABELS[name], "importance": float(mean_abs[i]),
          "mean_abs_shap": float(mean_abs[i]), "gain": training["hybrid_normalized_gain"][name]}
         for i, name in enumerate(names)], key=lambda f: -f["importance"])
-    report["feature_importance_definition"] = "importance=mean absolute OOF SHAP in raw log-odds; gain=mean normalized gain over five hybrid models"
+    report["feature_importance_definition"] = "importance=rata-rata absolut SHAP OOF dalam log-odds; gain=rata-rata gain ternormalisasi pada lima model hybrid"
     report["shap"] = shap_audit
     report["leakage_audit"] = {k: audit[k] for k in ("triggered_by_high_metrics", "forbidden_model_features", "label_leakage_detected",
                                                      "full_dataset_features_equal_after_label_removal")}
-    report["notes"].append("SHAP berasal dari model fold yang menilai klaim; kontribusi memakai satuan log-odds dan lolos rekonstruksi probabilitas OOF.")
+    shap_note = "SHAP berasal dari model fold yang menilai klaim; kontribusi memakai satuan log-odds dan lolos rekonstruksi probabilitas OOF."
+    if shap_note not in report["notes"]:
+        report["notes"].append(shap_note)
 
     n = len(claims)
     order = top_indexes(hybrid_probability, 100)

@@ -1,0 +1,7 @@
+{
+  "model_output": "Margin mentah (log-odds); satuannya bukan probabilitas",
+  "explainer": "shap.TreeExplainer; tree_path_dependent; model fold OOF yang menilai klaim terkait",
+  "n_claims": 62711,
+  "max_probability_reconstruction_error": 6.181844600661179e-07,
+  "reasons_selection": "Tiga kontribusi positif terbesar bila tersedia; jika kurang dari tiga, diisi kontribusi negatif nonnol dengan nilai absolut terbesar."
+}
