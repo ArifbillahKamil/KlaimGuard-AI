@@ -1,0 +1,32 @@
+[
+  {
+    "feature": "dx_peer_ratio",
+    "label": "Rasio biaya vs peer",
+    "explain": "Perbandingan biaya terhadap median diagnosis, kelas faskes, dan layanan sejenis.",
+    "template": "Biaya {value} kali median faskes sejenis"
+  },
+  {
+    "feature": "same_pat_fk_3d",
+    "label": "Kunjungan berdekatan",
+    "explain": "Jumlah klaim pasien yang berdekatan di faskes yang sama.",
+    "template": "{value} klaim berdekatan dalam 3 hari"
+  },
+  {
+    "feature": "pair_rarity",
+    "label": "Kelangkaan diagnosis–tindakan",
+    "explain": "Seberapa jarang kombinasi diagnosis dan tindakan ditemukan.",
+    "template": "Kombinasi diagnosis dan tindakan jarang ditemukan"
+  },
+  {
+    "feature": "nn_dist",
+    "label": "Kemiripan antar klaim",
+    "explain": "Jarak terhadap klaim lain yang paling mirip.",
+    "template": "Struktur biaya sangat mirip dengan klaim lain"
+  },
+  {
+    "feature": "los",
+    "label": "Durasi layanan",
+    "explain": "Lama perawatan dibanding klaim lain.",
+    "template": "Durasi layanan lebih wajar dibanding pola lain"
+  }
+]

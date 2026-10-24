@@ -1,0 +1,230 @@
+[
+  {
+    "faskes_id": "RS001",
+    "faskes_class": "A",
+    "faskes_ownership": "Pemerintah",
+    "n_claims": 25,
+    "n_high": 1,
+    "high_rate": 0.04,
+    "avg_risk": 52,
+    "est_excess_total": 42740000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 5,
+      "Repeat billing (klaim berulang)": 0,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 1,
+      "Services unbundling / fragmentation": 0,
+      "Inflated bills (penggelembungan tagihan)": 0,
+      "Cloning (penjiplakan klaim)": 0
+    },
+    "risk_rank": 1
+  },
+  {
+    "faskes_id": "RS002",
+    "faskes_class": "B",
+    "faskes_ownership": "Swasta",
+    "n_claims": 25,
+    "n_high": 1,
+    "high_rate": 0.04,
+    "avg_risk": 51.52,
+    "est_excess_total": 73740000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 0,
+      "Repeat billing (klaim berulang)": 5,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 0,
+      "Services unbundling / fragmentation": 1,
+      "Inflated bills (penggelembungan tagihan)": 0,
+      "Cloning (penjiplakan klaim)": 0
+    },
+    "risk_rank": 2
+  },
+  {
+    "faskes_id": "RS003",
+    "faskes_class": "C",
+    "faskes_ownership": "Swasta",
+    "n_claims": 25,
+    "n_high": 1,
+    "high_rate": 0.04,
+    "avg_risk": 51,
+    "est_excess_total": 64470000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 0,
+      "Repeat billing (klaim berulang)": 0,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 5,
+      "Services unbundling / fragmentation": 0,
+      "Inflated bills (penggelembungan tagihan)": 1,
+      "Cloning (penjiplakan klaim)": 0
+    },
+    "risk_rank": 3
+  },
+  {
+    "faskes_id": "RS004",
+    "faskes_class": "D",
+    "faskes_ownership": "Pemerintah",
+    "n_claims": 25,
+    "n_high": 1,
+    "high_rate": 0.04,
+    "avg_risk": 51,
+    "est_excess_total": 45950000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 0,
+      "Repeat billing (klaim berulang)": 0,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 0,
+      "Services unbundling / fragmentation": 5,
+      "Inflated bills (penggelembungan tagihan)": 0,
+      "Cloning (penjiplakan klaim)": 0
+    },
+    "risk_rank": 4
+  },
+  {
+    "faskes_id": "RS005",
+    "faskes_class": "A",
+    "faskes_ownership": "Swasta",
+    "n_claims": 25,
+    "n_high": 1,
+    "high_rate": 0.04,
+    "avg_risk": 50.52,
+    "est_excess_total": 68130000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 1,
+      "Repeat billing (klaim berulang)": 0,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 0,
+      "Services unbundling / fragmentation": 0,
+      "Inflated bills (penggelembungan tagihan)": 5,
+      "Cloning (penjiplakan klaim)": 0
+    },
+    "risk_rank": 5
+  },
+  {
+    "faskes_id": "RS006",
+    "faskes_class": "B",
+    "faskes_ownership": "Swasta",
+    "n_claims": 25,
+    "n_high": 1,
+    "high_rate": 0.04,
+    "avg_risk": 50,
+    "est_excess_total": 45170000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 0,
+      "Repeat billing (klaim berulang)": 0,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 0,
+      "Services unbundling / fragmentation": 0,
+      "Inflated bills (penggelembungan tagihan)": 0,
+      "Cloning (penjiplakan klaim)": 5
+    },
+    "risk_rank": 6
+  },
+  {
+    "faskes_id": "RS007",
+    "faskes_class": "C",
+    "faskes_ownership": "Pemerintah",
+    "n_claims": 25,
+    "n_high": 1,
+    "high_rate": 0.04,
+    "avg_risk": 50,
+    "est_excess_total": 43900000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 5,
+      "Repeat billing (klaim berulang)": 0,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 1,
+      "Services unbundling / fragmentation": 0,
+      "Inflated bills (penggelembungan tagihan)": 0,
+      "Cloning (penjiplakan klaim)": 0
+    },
+    "risk_rank": 7
+  },
+  {
+    "faskes_id": "RS008",
+    "faskes_class": "D",
+    "faskes_ownership": "Swasta",
+    "n_claims": 25,
+    "n_high": 1,
+    "high_rate": 0.04,
+    "avg_risk": 49.48,
+    "est_excess_total": 53410000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 0,
+      "Repeat billing (klaim berulang)": 4,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 0,
+      "Services unbundling / fragmentation": 1,
+      "Inflated bills (penggelembungan tagihan)": 0,
+      "Cloning (penjiplakan klaim)": 0
+    },
+    "risk_rank": 8
+  },
+  {
+    "faskes_id": "RS009",
+    "faskes_class": "A",
+    "faskes_ownership": "Swasta",
+    "n_claims": 25,
+    "n_high": 1,
+    "high_rate": 0.04,
+    "avg_risk": 49,
+    "est_excess_total": 43140000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 0,
+      "Repeat billing (klaim berulang)": 0,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 4,
+      "Services unbundling / fragmentation": 0,
+      "Inflated bills (penggelembungan tagihan)": 0,
+      "Cloning (penjiplakan klaim)": 0
+    },
+    "risk_rank": 9
+  },
+  {
+    "faskes_id": "RS010",
+    "faskes_class": "B",
+    "faskes_ownership": "Pemerintah",
+    "n_claims": 25,
+    "n_high": 0,
+    "high_rate": 0,
+    "avg_risk": 49,
+    "est_excess_total": 24000000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 0,
+      "Repeat billing (klaim berulang)": 0,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 0,
+      "Services unbundling / fragmentation": 4,
+      "Inflated bills (penggelembungan tagihan)": 0,
+      "Cloning (penjiplakan klaim)": 1
+    },
+    "risk_rank": 10
+  },
+  {
+    "faskes_id": "RS011",
+    "faskes_class": "C",
+    "faskes_ownership": "Swasta",
+    "n_claims": 25,
+    "n_high": 0,
+    "high_rate": 0,
+    "avg_risk": 48.48,
+    "est_excess_total": 38410000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 0,
+      "Repeat billing (klaim berulang)": 0,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 0,
+      "Services unbundling / fragmentation": 0,
+      "Inflated bills (penggelembungan tagihan)": 4,
+      "Cloning (penjiplakan klaim)": 0
+    },
+    "risk_rank": 11
+  },
+  {
+    "faskes_id": "RS012",
+    "faskes_class": "D",
+    "faskes_ownership": "Swasta",
+    "n_claims": 25,
+    "n_high": 0,
+    "high_rate": 0,
+    "avg_risk": 48,
+    "est_excess_total": 63900000,
+    "pattern_counts": {
+      "Phantom billing (klaim palsu)": 0,
+      "Repeat billing (klaim berulang)": 1,
+      "Manipulasi diagnosis dan/atau tindakan (upcoding)": 0,
+      "Services unbundling / fragmentation": 0,
+      "Inflated bills (penggelembungan tagihan)": 0,
+      "Cloning (penjiplakan klaim)": 4
+    },
+    "risk_rank": 12
+  }
+]

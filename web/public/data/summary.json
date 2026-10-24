@@ -1,0 +1,72 @@
+{
+  "generated_at": "2026-10-24T12:00:00+07:00",
+  "data_source": "sample",
+  "dataset": {
+    "n_claims": 300,
+    "n_faskes": 12,
+    "n_patients": 247,
+    "fraud_rate": 0.09666666666666666,
+    "synthetic": true
+  },
+  "kpi": {
+    "n_high": 9,
+    "n_medium": 21,
+    "n_low": 270,
+    "est_excess_total_idr": 606960000,
+    "n_faskes_high_risk": 9
+  },
+  "tiers": {
+    "high_top_pct": 3,
+    "medium_top_pct": 10,
+    "score_cut_high": 97,
+    "score_cut_medium": 90
+  },
+  "score_hist": {
+    "bin_edges": [
+      0,
+      5,
+      10,
+      15,
+      20,
+      25,
+      30,
+      35,
+      40,
+      45,
+      50,
+      55,
+      60,
+      65,
+      70,
+      75,
+      80,
+      85,
+      90,
+      95,
+      100
+    ],
+    "counts": [
+      14,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      14,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      15,
+      17
+    ]
+  },
+  "disclaimer": "Data contoh sintetis. Bukan data peserta JKN. Skor dan metrik ilustratif; bukan hasil pelatihan atau klaim performa dunia nyata."
+}
