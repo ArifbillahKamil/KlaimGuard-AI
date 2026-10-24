@@ -18,9 +18,9 @@ Deadline: **1 November 2026** (target submit 31 Oktober)
 - [x] `features.py` + sanity check fitur — definisi terarah: 13/13 lolos, 253 overlap (134 phantom/92 normal/27 lain), enrichment 69,778x; tujuh tes lolos
 - [x] Isolation Forest (`if_score`)
 - [x] XGBoost 5-fold OOF: `if_only`, `xgb_only`, `hybrid`
-- [ ] Evaluasi + eksperimen hold-out per jenis fraud
-- [ ] SHAP + teks alasan + aturan pola dugaan
-- [ ] Ekspor JSON ke `web/public/data/` + validasi
+- [x] Evaluasi + eksperimen hold-out per jenis fraud
+- [x] SHAP + teks alasan + aturan pola dugaan
+- [x] Ekspor JSON ke `web/public/data/` + validasi
 - [ ] `run_all.py`, `requirements.txt` (pin), `ml/README.md`
 - [ ] **GATE A: lapor ke Abil dan tunggu konfirmasi**
 
@@ -31,6 +31,8 @@ Checkpoint fitur: 62.711 klaim -> 27 fitur, seluruhnya berhingga; lima tes lolos
 Revisi disetujui Abil dan Claude: ekspektasi lama pada overlap simetris dinyatakan salah dan hasil awal diverifikasi independen. Fitur diganti menjadi terarah: tandai rawat inap yang masuk lebih belakangan; tanggal masuk sama menandai keduanya; interval setengah terbuka dan hanya lintas faskes. Sanity terakhir mensyaratkan proporsi phantom >50% sekaligus enrichment >=10x. Ekspektasi jumlah: 253 total / 134 phantom / 92 normal / 27 lain. Definisi ini dipilih **setelah membandingkan dua definisi pada data penuh**, sehingga merupakan keputusan desain berbasis data dan membatasi independensi evaluasi. Dokumen Prompt 1 dan unit test diperbarui; dataset/generator tetap tidak diubah.
 
 Training awal selesai: 27,976 detik; IF 300 tree pada 23 fitur numerik setelah RobustScaler, tanpa label. Supervised OOF lima fold distratifikasi `fraud_type`; early stopping memakai split validasi 20% di dalam train, kemudian refit seluruh outer train dengan jumlah tree terpilih. Fold uji tidak dipakai fit/early stopping. PR-AUC/AP: IF 0,258685; XGBoost 0,804339; hybrid 0,799798. Recall@5%: 32,0761% / 77,6940% / 77,0115%. Hybrid sedikit lebih rendah; parameter tidak disetel berdasarkan hasil ini. Hold-out enam jenis sedang dijalankan. IF dan fitur peer/history mengikuti seluruh batch tanpa label sesuai brief, sehingga evaluasi bersifat transduktif; bukan validasi prospektif independen.
+
+Evaluasi/hold-out awal selesai dalam 157,330 detik (enam jenis, lima fold per jenis; T dihapus sebelum inner split dan refit supervised). Hybrid lebih baik dari XGBoost pada hold-out repeat (40,336% vs 16,597%) dan unbundling (17,079% vs 4,950%); lebih rendah pada upcoding dan cloning. Tidak ada klaim hybrid unggul secara umum. SHAP seluruh 62.711 klaim memakai model fold yang menghasilkan prediksi masing-masing; rekonstruksi probabilitas OOF maksimal 6,18e-7. Audit penuh: label/claim_id dihapus atau diganti -> matriks fitur identik; tidak ada label/ID mentah pada 10 model tersimpan; pemicu performa terlalu bagus tidak aktif. Lima JSON aktual tervalidasi: 3.000 klaim, 120 faskes, 2.803.310 byte; hanya lima JSON dalam `web/public/data/` diubah. Sepuluh unit test lolos. `run_all.py` tersedia dan akan dijalankan dari CSV ke direktori artefak baru untuk pembandingan reproduksibilitas.
 
 ### Prompt 2 — Dashboard (`docs/02_PROMPT_DASHBOARD.md`)
 - [x] Scaffold Vite + React + TS + Tailwind, data contoh sesuai kontrak
