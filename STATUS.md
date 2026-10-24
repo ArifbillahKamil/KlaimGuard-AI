@@ -24,6 +24,8 @@ Deadline: **1 November 2026** (target submit 31 Oktober)
 - [ ] `run_all.py`, `requirements.txt` (pin), `ml/README.md`
 - [ ] **GATE A: lapor ke Abil dan tunggu konfirmasi**
 
+Catatan Prompt 1 (24 Oktober 2026): preflight berhasil, Python 3.12.6; venv `ml/.venv`; NumPy 2.5.4, pandas 3.1.0, scikit-learn 1.9.1, XGBoost 3.4.1, SHAP 0.54.1, PyArrow 26.0.0. Versi terpasang dipin di `ml/requirements.txt`. Perubahan dashboard dilarang selain lima JSON ekspor di `web/public/data/`. Training hanya dilanjutkan jika sanity check fitur tidak meleset lebih dari 20%; dataset dan generator tidak diregenerasi atau diubah.
+
 ### Prompt 2 — Dashboard (`docs/02_PROMPT_DASHBOARD.md`)
 - [x] Scaffold Vite + React + TS + Tailwind, data contoh sesuai kontrak
 - [x] Ringkasan, Antrean Audit (panel detail + keputusan auditor + ekspor CSV)
