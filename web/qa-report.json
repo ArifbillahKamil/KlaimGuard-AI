@@ -1,0 +1,68 @@
+{
+    "generated_at":  "2026-10-24T14:44:53.5216952Z",
+    "data_source":  "sample",
+    "synthetic":  true,
+    "seed":  42,
+    "n_claims":  300,
+    "n_facilities":  12,
+    "ml_metrics":  "illustrative, not trained or evaluated",
+    "browser_qa":  {
+                       "passed":  14,
+                       "checks":  [
+                                      "Five JSON files: contract, counts, official patterns, sort and synthetic marker",
+                                      "Desktop route /, title, screenshot",
+                                      "Desktop route /antrean, title, screenshot",
+                                      "Desktop route /faskes, title, screenshot",
+                                      "Desktop route /evaluasi, title, screenshot",
+                                      "Desktop route /tata-kelola, title, screenshot",
+                                      "Queue virtualization, all filters, reset, empty state, sort, keyboard detail",
+                                      "No eval label in normal queue, SHAP detail, local decision persistence and safe CSV export",
+                                      "Evaluation mode controls hidden labels, budget and confusion matrix",
+                                      "Facility selection and deep link to queue",
+                                      "Mobile 390px: five routes, no page overflow, navigation and detail screenshots",
+                                      "Corrupt and unavailable localStorage handled without crash",
+                                      "JSON error, retry, malformed schema, loading and empty states",
+                                      "Unknown hash route provides recovery"
+                                  ],
+                       "runtimeErrors":  [
+
+                                         ],
+                       "screenshots":  12,
+                       "base":  "http://127.0.0.1:4173"
+                   },
+    "lighthouse":  {
+                       "version":  "13.5.0",
+                       "scope":  "Ringkasan desktop, 300 synthetic sample claims, local preview",
+                       "performance":  100,
+                       "accessibility":  100,
+                       "best_practices":  100,
+                       "fcp_ms":  408.0876999999999,
+                       "lcp_ms":  495.13154999999995,
+                       "cls":  0
+                   },
+    "accessibility":  {
+                          "standard":  "automated axe WCAG A/AA",
+                          "pages_desktop":  5,
+                          "pages_mobile":  5,
+                          "detail_desktop":  true,
+                          "violations":  0
+                      },
+    "build":  {
+                  "passed":  true,
+                  "main_js":  "index-BW7kXqRJ.js",
+                  "main_js_bytes":  313208
+              },
+    "dev_smoke":  {
+                      "passed":  true,
+                      "json_http_200":  5,
+                      "runtime_errors":  0
+                  },
+    "npm_audit_total":  0,
+    "screenshot_png_count":  12,
+    "limitations":  [
+                        "ML integration pending Prompt 1; no actual feature sanity checks or hold-out experiments were run by frontend agent.",
+                        "Lighthouse and browser QA measured sample data, not full ML export.",
+                        "Automated accessibility checks do not replace a complete manual audit.",
+                        "No production deployment. No files under ml/ were modified."
+                    ]
+}
