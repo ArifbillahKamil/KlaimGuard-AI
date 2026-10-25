@@ -1,81 +1,85 @@
-# Checkpoint Prompt 2 — Dashboard contoh
+# Gate C — QA lokal dengan ekspor ML aktual
 
-24 Oktober 2026. Semua data sintetis; angka performa ML pada UI adalah ilustrasi, bukan klaim performa dunia nyata.
+25 Oktober 2026. **Semua data sintetis, bukan data peserta JKN. Angka performa bukan klaim performa dunia nyata. Keputusan akhir tetap pada auditor manusia.**
 
-## 1. Selesai dan belum selesai
+Gate A disetujui bersyarat. Evaluasi kelompok, integrasi dan QA selesai; **belum deploy**. Model tidak disetel dan skor OOF antrean tidak diganti. Enam hash terlindungi (empat JSON non-report, OOF NPZ, SHAP NPY) masih identik dengan sebelum evaluasi kelompok.
 
-Lima halaman berjalan menggunakan Vite + React + TypeScript + Tailwind. Antrean memiliki tabel virtual, pencarian, filter, pengurutan, panel detail dengan alasan SHAP, pembandingan median peer, keputusan auditor, catatan lokal, dan ekspor CSV. Mode Evaluasi menampilkan label sintetis dan matriks sederhana. Halaman Faskes dan Evaluasi dimuat secara lazy. Font Inter disajikan lokal. Kondisi loading, error, retry, empty, serta penyimpanan lokal rusak/ditolak telah diuji.
+## Evaluasi kelompok
 
-Belum: integrasi JSON aktual dari Prompt 1 dan deployment. `ml/` tidak diubah. Pada `STATUS.md`, hanya bagian Prompt 2 yang diperbarui. Ini bukan laporan Gate A atau persetujuan Gate C.
+StratifiedGroupKFold lima fold, stratifikasi fraud_type, seed 42, shuffle=True. Validasi internal juga memisahkan kelompok, dengan aturan early stopping/refit dan parameter estimator tetap. Sebelas unit test ML lolos. Audit 20 model grouped menyatakan outer/inner groups disjoint; setiap klaim mendapat satu prediksi uji. IF dan referensi fitur tetap transduktif.
 
-## 2. Sanity check data contoh
+| Kelompok | Varian | AP | R@2% | P@2% | R@5% | P@5% | R@10% | P@10% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| faskes_id | xgb_only | 0,732999 | 43,46% | 96,41% | 71,70% | 63,65% | 79,42% | 35,25% |
+| faskes_id | hybrid | 0,741866 | 43,79% | 97,13% | 72,45% | 64,32% | 80,46% | 35,71% |
+| patient_id | xgb_only | 0,808862 | 44,22% | 98,09% | 78,05% | 69,29% | 88,18% | 39,14% |
+| patient_id | hybrid | 0,804799 | 44,40% | 98,49% | 77,26% | 68,59% | 87,75% | 38,95% |
 
-Ini pemeriksaan kontrak fixture frontend, **bukan sanity check fitur ML**.
+Recall per jenis lengkap ada di [laporan grouped](../ml/reports/GROUPED_EVAL.md), `model_report.json`, dan halaman Evaluasi. AP faskes terpisah turun, sedangkan AP pasien terpisah sedikit naik; tidak semua pemisahan kelompok otomatis menurunkan metrik. Hybrid tetap belum unggul pada evaluasi per klaim Gate A. Perbandingan ini belum membuktikan generalisasi prospektif karena referensi fitur/IF masih memakai batch penuh tanpa label.
 
-| Pemeriksaan | Hasil nyata | Ekspektasi |
-| --- | ---: | --- |
-| Jumlah klaim | 300 | 300 |
-| Jumlah faskes | 12 | 12 |
-| Seed generator | 42 | 42 |
-| Klaim tier tinggi / menengah / rendah | 9 / 21 / 270 | 3% / 7% / 90% |
-| Jumlah histogram | 300 | Sama dengan jumlah klaim |
-| Pola resmi | Lolos | Hanya enam label dalam kontrak |
-| Referensi pasien | Lolos | `PX-` + 6 karakter hash; tidak menampilkan `patient_id` |
-| Urutan skor | Lolos | Menurun |
-| Alasan per klaim | 3 | 3; fitur tercantum pada kamus |
-| Estimasi selisih biaya | Lolos | `max(0, claim_total - peer_median)` |
-| Semua sumber data | Sintetis | `dataset.synthetic = true` |
+## Hasil QA aktual
 
-Generator menolak menimpa JSON yang bukan fixture `data_source: "sample"`. Lima JSON bisa diganti bersama-sama dengan ekspor Prompt 1 tanpa perubahan kode UI.
+- Build bersih: TypeScript dan Vite v6.4.5 lolos; bundel awal sekitar 97,27 kB gzip. Vite membersihkan output build sebelum menulis hasil baru.
+- 15 kelompok pemeriksaan browser lolos; **0 error console/runtime tak terduga** pada rute dan alur normal. Respons 503/JSON rusak sengaja disuntikkan di konteks browser terpisah untuk negative test.
+- Data ML aktual: 62.711 klaim sumber, 3.000 klaim antrean, 120 faskes; schema, pola resmi, referensi pasien dan estimasi rupiah diperiksa.
+- Lima rute langsung, semua filter, pencarian, pengurutan, panel detail berisi tiga SHAP aktual, fokus keyboard, keputusan + catatan, persistensi setelah reload dan CSV lolos.
+- CSV diuji dengan UTF-8 BOM, koma, tanda kutip, newline dan awalan formula; tidak menjalankan formula.
+- Mode Evaluasi nonaktif setelah muat/reload; label individual hanya muncul setelah opt-in. Matriks subset diberi peringatan.
+- Kelima halaman desktop dan mobile 390 px lolos pemeriksaan otomatis axe WCAG A/AA, termasuk panel desktop; tidak ada overflow halaman pada 390 px. Ini tidak menggantikan audit manual aksesibilitas penuh.
+- Dua belas PNG aktual diambil ulang: lima halaman + detail, desktop dan mobile. [Indeks screenshot](screenshots/README.md).
+- Tabel virtual: maksimum **17 baris DOM** selama 100 frame pengguliran; median interval **16,7 ms**, p95 **17,4 ms**, maksimum **24,5 ms**. Pencarian **15 ms**. Angka lokal headless tanpa throttling, bukan jaminan pada seluruh perangkat.
+- Storage kosong/rusak/ditolak, loading, empty, JSON gagal/retry, schema salah dan pemulihan rute tidak dikenal lolos.
 
-## 3. Metrik dan QA yang benar-benar dijalankan
+## Lighthouse
 
-| Pemeriksaan | Hasil |
-| --- | --- |
-| `npm run build` | Lolos TypeScript dan build produksi |
-| `npm run dev` | Berjalan; HTTP 200 untuk lima JSON; Ringkasan, Antrean, panel detail lolos smoke test |
-| `npm run qa` | 14 kelompok pemeriksaan lolos; 0 error runtime tak terduga |
-| Aksesibilitas otomatis axe | 0 pelanggaran WCAG A/AA pada lima halaman desktop dan mobile, serta panel detail desktop |
-| Responsif | Tidak ada overflow halaman pada 390 px; tabel lebar dapat digulir dengan sentuhan dan keyboard |
-| Lighthouse desktop, Ringkasan | Performance 100 / Accessibility 100 / Best Practices 100 |
-| FCP / LCP / CLS | Sekitar 0,4 dtk / 0,5 dtk / 0 |
-| Audit npm | 0 kerentanan pada akhir pembaruan dependensi |
-| Screenshot | 12 PNG: lima halaman + detail, masing-masing desktop dan mobile |
+Lighthouse 13.5.0, Chromium headless, data ML aktual. **Satu run per skenario**; seluruh hasil disimpan. Desktop 1440 × 1050, RTT 40 ms, throughput 10.240 Kbps, CPU 1x. Mobile 390 × 844, RTT 150 ms, throughput 1.638,4 Kbps, CPU 4x. Kategori yang diukur: Performance, Accessibility, Best Practices.
 
-Lighthouse diuji lokal dengan 300 klaim contoh, bukan 3.000 klaim ekspor ML. Hasil dapat berubah pada mesin lain, ukuran JSON lengkap, dan hosting produksi. Pengujian otomatis tidak menggantikan pemeriksaan aksesibilitas manual penuh.
+| Halaman | Perangkat | Performance | Accessibility | Best Practices | LCP | TBT | CLS |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| ringkasan | desktop | 100 | 100 | 100 | 0,77 dtk | 0,0 ms | 0,000059 |
+| antrean | desktop | 100 | 100 | 100 | 0,76 dtk | 0,0 ms | 0,000062 |
+| ringkasan | mobile | 88 | 100 | 100 | 3,77 dtk | 3,0 ms | 0,000016 |
+| antrean | mobile | 89 | 100 | 100 | 3,70 dtk | 50,0 ms | 0,000020 |
 
-Lingkungan eksekusi build/QA: Windows, PowerShell, Node.js v24.20.0, Vite v6.4.5, Playwright Chromium. Node v22.11.0 terbaca di sandbox; pembatasan sandbox menyebabkan `EPERM` pada pembacaan direktori induk sehingga eksekusi memakai izin di luar sandbox. Lighthouse 13.5 membutuhkan Node >=22.19.
+Mobile **belum mencapai 90** pada pengukuran ini. LCP mobile sekitar 3,7 detik, meskipun TBT rendah. Laporan mentah mencatat JavaScript yang belum terpakai dan permintaan CSS yang memblokir render; pengumpulan seluruh JSON juga masih berada pada jalur pemuatan awal. BFCache dinonaktifkan oleh flag browser pengujian. Hasil lokal/preview ini belum menggantikan pengujian hosting produksi atau perangkat riil.
 
-## 4. Recall, PR-AUC dan hold-out ML
+## Daftar perubahan teks UI
 
-**Belum ada hasil eksperimen ML aktual dalam pekerjaan agent kedua ini.** PR-AUC tiga varian, recall pada anggaran 2/5/10%, recall per jenis dan tabel hold-out telah diuji sebagai tampilan fixture. Angka contoh tidak membuktikan keunggulan hybrid. Hasil model nyata dan sanity check fitur tetap tanggung jawab Prompt 1 / Gate A.
+1. Ringkasan: kartu "Simulasi anggaran pemeriksaan 5%" membandingkan recall, precision/base rate, dan kebalikan rate; semua angka dihitung dari JSON.
+2. Angka performa: label "Data sintetis | validasi silang 5-fold" terlihat per kelompok metrik dan melekat pada setiap nilai lewat tooltip serta teks pembaca layar.
+3. Evaluasi: tabel AP/recall/precision ketiga varian dan catatan "Hybrid belum unggul atas xgb_only pada AP evaluasi per klaim ini".
+4. Hold-out: penjelasan "Pola yang belum pernah dilihat sebagian besar tidak tertangkap model supervised"; tidak mengklaim hybrid unggul secara umum.
+5. Evaluasi per kelompok: tabel faskes/pasien, recall per jenis, dan satu kalimat batas transduktif per skema.
+6. Batasan: data sintetis, pola disuntikkan, overlap terarah dipilih setelah melihat data penuh, evaluasi transduktif dan risiko false positive.
+7. Antrean: "3.000 klaim teratas dari 62.711" dari JSON; default Mode Evaluasi tetap tersembunyi; skor sama menjaga urutan ekspor.
+8. Matriks: menjelaskan subset ekspor dan bahwa nol FN/TN ketika seluruh subset diprioritaskan bukan bukti semua kasus dataset tertangkap.
+9. Tata Kelola: paragraf retraining berkala dan jalur anomali terpisah sebagai rencana pengembangan untuk pola baru.
 
-## 5. Temuan dan batasan
+## Temuan dan perbaikan
 
-- Pengujian menemukan dan memperbaiki label filter, atribut ARIA baris Faskes, serta fokus keyboard pada tabel horizontal dan navigasi ponsel tertutup.
-- Warna cincin mengikuti tier eksplisit agar pembulatan persentil tidak salah memberi warna pada skor yang sama.
-- CSV telah diuji untuk koma, tanda kutip, baris baru, UTF-8 BOM, dan awalan formula. Keputusan tetap tersedia selama sesi ketika storage ditolak.
-- Matriks evaluasi hanya mencakup klaim ekspor berlabel; tidak diklaim sebagai matriks seluruh dataset saat ekspor dibatasi.
-- Pseudonim SHA1 pendek untuk demo bukan jaminan anonimitas produksi. Penyimpanan lokal bukan audit trail terpusat.
-- Tidak ada tuning model, regenerasi dataset ML, akses data JKN riil, atau deployment dalam tahap ini.
+1. QA menemukan overflow mobile akibat teks pembaca layar pada angka di kolom tabel horizontal; posisi label dibatasi pada nilai terkait. Tabel simulasi kini menampilkan dua metode sekaligus pada 390 px.
+2. Seluruh subset 3.000 ekspor masuk dalam budget 5% yang berisi 3.136 klaim; karena itu matriks subset dapat mempunyai FN/TN nol. UI sekarang menyatakannya eksplisit.
+3. Pemisahan faskes menurunkan AP hybrid ke 0,741866, sementara pasien terpisah menghasilkan 0,804799. Skor Antrean tetap OOF per klaim dari Gate A.
+4. Desktop mendapat Performance 100, tetapi mobile hanya 88/89 pada kondisi throttling yang dicatat. Tidak dilakukan penyetelan model atau pemilihan skor Lighthouse terbaik.
 
-## 6. Reproduksi dan artefak
+## Reproduksi
+
+Jalankan dari `web/`:
 
 ```powershell
-cd "C:\Users\diamo\Documents\VSC\Hackaton\BPJS Healtkathon\web"
 npm ci
 npm run build
-npm run preview -- --port 4173
+npm run preview -- --port 4173 --strictPort
 ```
 
-Di terminal lain dari `web/`:
+Di terminal lain dari folder yang sama:
 
 ```powershell
-npx playwright install chromium
 npm run qa
 node scripts/performance.mjs
+node scripts/report-qa.mjs
 ```
 
-Smoke test mode pengembangan: jalankan `npm run dev -- --port 5173`, lalu `node scripts/smoke-dev.mjs`.
+Evaluasi kelompok: dari `ml/`, `$env:PYTHONUTF8 = "1"` lalu `.\.venv\Scripts\python.exe -m src.evaluate --grouped-only --artifact-dir artifacts/final_run`.
 
-Artefak: `src/`, lima JSON di `public/data/`, `README.md`, 12 PNG dan indeks di `screenshots/`, `qa-report.json`, serta skrip generator/QA/smoke/Lighthouse di `scripts/`. Output pengujian rinci, CSV uji, serta laporan Lighthouse lengkap tersimpan lokal di `qa-results/` dan diabaikan Git.
+Artefak terperinci lokal ada di `qa-results/` (diabaikan Git); ringkasan terstruktur di `qa-report.json`. Skor dan sumber data tetap sama. **Berhenti di Gate C; deploy memerlukan konfirmasi Abil.**

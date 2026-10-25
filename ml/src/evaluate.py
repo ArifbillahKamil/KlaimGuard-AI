@@ -106,7 +106,7 @@ def run_evaluation(artifact_dir: Path | None = None) -> dict:
         "Isolation Forest, median peer, nearest-neighbor dan hitungan riwayat memakai seluruh batch tanpa label: evaluasi transduktif, bukan generalisasi prospektif atau ke faskes baru.",
         "Definisi overlap terarah dipilih setelah membandingkan dua definisi pada data penuh; ini keputusan desain berbasis data dan membatasi independensi evaluasi.",
         "Hold-out membuang satu jenis fraud hanya dari train supervised. Isolation Forest tetap melihat kovariat tanpa label dari jenis itu sesuai brief.",
-        "Split per klaim dapat memisahkan klaim berelasi ke fold berbeda. Evaluasi kelompok pasien/faskes dan waktu masih diperlukan.",
+        "Split per klaim dapat memisahkan klaim berelasi ke fold berbeda. Lihat grouped_eval untuk evaluasi kelompok tambahan bila tersedia; evaluasi waktu dan validasi prospektif masih diperlukan.",
         "Cloning sintetis memiliki jitter sangat kecil dan dapat terlalu mudah; phantom memiliki sinyal lemah. Pola dugaan adalah heuristik, bukan label atau tuduhan.",
         "Estimasi kelebihan bayar adalah selisih positif biaya terhadap median peer; bukan kerugian terkonfirmasi. Keputusan akhir ada pada auditor.",
     ]

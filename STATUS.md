@@ -1,6 +1,6 @@
 # STATUS — KlaimGuard AI
 
-Terakhir diperbarui: 25 Oktober 2026 (oleh agent pembangun; persetujuan Gate A bersyarat)
+Terakhir diperbarui: 25 Oktober 2026 (oleh agent pembangun; QA selesai, menunggu Gate C)
 Deadline: **1 November 2026** (target submit 31 Oktober)
 
 > Agent: perbarui file ini setelah setiap tahap (centang, tanggal, temuan, keputusan).
@@ -50,9 +50,17 @@ Catatan kompatibilitas: batas preflight awal Python >=3.10 terpenuhi oleh 3.12.6
 Catatan agent kedua (24 Oktober 2026): pekerjaan dibatasi pada `web/` dan bagian Prompt 2 ini; `ml/` tidak disentuh, tidak deploy. Generator contoh sudah dijalankan: 300 klaim, 12 faskes, seed 42, lima JSON. Skor, SHAP, dan seluruh metrik/hold-out bersifat ilustratif, bukan hasil ML. Metadata tambahan `summary.data_source = "sample"` menampilkan peringatan contoh; generator menolak menimpa ekspor ML. Lima halaman, tabel virtual, filter, pengurutan, panel detail, keputusan lokal, CSV, Mode Evaluasi dan kondisi loading/error/empty sudah berjalan. Halaman Faskes dan Evaluasi dimuat secara lazy; font Inter disajikan lokal. Vite 6 dipilih agar cocok dengan Node v22.11.0 yang terbaca di sandbox; eksekusi build/QA di luar sandbox memakai Node v24.20.0. Lighthouse 13.5 (alat QA opsional) membutuhkan Node >=22.19. Build berhasil; QA browser 14 kelompok pemeriksaan lolos, termasuk penyimpanan kosong/rusak/ditolak dan CSV aman dari formula. Artefak final: 12 screenshot (lima halaman + detail, desktop dan mobile), indeks screenshot, web/QA.md, dan web/qa-report.json. Lighthouse desktop Ringkasan: Performance 100, Accessibility 100, Best Practices 100, LCP sekitar 0,5 detik pada 300 data contoh; bukan pengukuran data ML lengkap. Audit npm akhir: 0 kerentanan. Pemeriksaan aksesibilitas otomatis WCAG A/AA lima halaman desktop/mobile dan panel detail desktop lolos. npm run dev juga diuji: lima JSON HTTP 200 dan 0 error runtime pada smoke test. Integrasi JSON hasil ML tetap menunggu Prompt 1.
 
 ### Prompt 3 — Deploy & QA (`docs/03_PROMPT_DEPLOY_VERCEL_QA.md`)
-- [ ] QA lokal (build bersih, rute, filter, ekspor, mobile 390 px)
-- [ ] **GATE C: tunjukkan hasil QA, minta konfirmasi**
+- [x] QA lokal dengan data ML aktual (build bersih, lima rute, filter, panel detail, keputusan, CSV, mobile 390 px)
+- [ ] **GATE C: laporan QA siap, menunggu konfirmasi Abil; belum disetujui**
 - [ ] Deploy Vercel (Root Directory = `web`), uji URL produksi
+
+Checkpoint 25 Oktober 2026 setelah persetujuan Gate A bersyarat:
+
+- Evaluasi tambahan `StratifiedGroupKFold` 5 fold, stratifikasi `fraud_type`, kelompok `faskes_id` lalu `patient_id`, seed 42; pemisahan kelompok juga berlaku pada validasi internal. Parameter model tidak diubah. AP XGBoost/hybrid: faskes **0,732999 / 0,741866**; pasien **0,808862 / 0,804799**. Recall/precision anggaran 2/5/10% dan recall per jenis ada di `ml/reports/GROUPED_EVAL.md`, README ML dan `model_report.json.grouped_eval`. Durasi 161,530 detik, 20 audit model menyatakan kelompok outer/inner terpisah, 11 unit test lolos. IF/referensi fitur masih transduktif. Skor OOF, SHAP dan empat JSON non-report identik SHA256 sebelum/sesudah; angka metrik biasa tidak diganti.
+- Dashboard memakai lima JSON ML aktual; riwayat data contoh di Prompt 2 di atas tidak lagi menggambarkan sumber data saat ini. Simulasi 5% dihitung dari JSON: recall acak/hybrid **5% / 77,01%**, precision **4,44% / 68,37%**, klaim per kasus **22,5 / 1,5**. Teks mengakui hybrid belum unggul atas XGBoost pada AP evaluasi biasa, batas hold-out, pemilihan overlap setelah melihat data penuh, dan evaluasi transduktif. Antrean **3.000 dari 62.711**, Mode Evaluasi tersembunyi secara default. Tata Kelola menjelaskan retraining dan jalur anomali sebagai rencana.
+- Build produksi TypeScript/Vite lolos; **15 kelompok QA browser lolos, 0 error console/runtime tak terduga**. Lima rute desktop/mobile 390 px dan panel detail diperiksa; filter/pencarian/urut, keputusan persisten, CSV BOM/quoting/newline/antiformula, storage rusak/ditolak, error/retry/empty dan axe WCAG A/AA lolos. Maksimum 17 baris DOM saat menggeser tabel 3.000 baris; median frame 16,7 ms, p95 17,4 ms, maksimum 24,5 ms; pencarian 15 ms pada mesin lokal. Dua belas screenshot diambil ulang memakai data ML aktual.
+- Lighthouse 13.5.0, **satu run per skenario**: Ringkasan desktop **100/100/100**, Antrean desktop **100/100/100**, Ringkasan mobile **88/100/100**, Antrean mobile **89/100/100** (Performance/Accessibility/Best Practices). LCP mobile 3,775/3,698 detik; mobile belum mencapai 90. Kondisi throttling dan hasil lengkap di `web/QA.md` serta `web/qa-report.json`. Tidak memilih hasil terbaik dari pengulangan.
+- Temuan QA: overflow mobile dari label aksesibilitas diperbaiki. Matriks evaluasi hanya subset 3.000 ekspor; budget 5% mencakup 3.136 klaim sehingga nol FN/TN pada subset bukan bukti cakupan seluruh dataset. UI menjelaskan keterbatasan ini. Tidak ada tuning, perubahan dataset/generator, penggantian skor antrean atau deployment. **Berhenti di Gate C.**
 
 ## Jadwal target
 | Tanggal | Pekerjaan |

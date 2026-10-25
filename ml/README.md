@@ -98,7 +98,7 @@ Median peer diekspor dengan pembulatan rupiah; estimasi selisih = `max(0, claim_
 
 Audit tetap dijalankan meskipun pemicu AP hybrid >0,99 atau hampir semua jenis recall >=95% tidak aktif. Pada seluruh 62.711 baris, menghapus/mengganti label dan `claim_id` tidak mengubah fitur. Tidak ada `fraud_label`, `fraud_type`, turunannya dari label, atau ID mentah dalam fitur model; metadata label hanya untuk stratifikasi/evaluasi dan `eval` pada ekspor.
 
-Seluruh sumber dan generator sama berdasarkan SHA256. Split per klaim dapat berbagi pasien/faskes atau klaim berelasi lintas fold. IF dan fitur referensi memakai batch penuh tanpa label. Definisi overlap dipilih setelah membandingkan dua definisi pada data penuh. Karena itu, skor OOF ini bukan validasi prospektif independen; evaluasi per waktu/kelompok dan data dunia nyata berizin tetap diperlukan. Data disuntikkan dengan pola yang diketahui; cloning ber-jitter kecil dapat terlalu mudah.
+Seluruh sumber dan generator sama berdasarkan SHA256. Split per klaim dapat berbagi pasien/faskes atau klaim berelasi lintas fold. IF dan fitur referensi memakai batch penuh tanpa label. Definisi overlap dipilih setelah membandingkan dua definisi pada data penuh. Karena itu, skor OOF ini bukan validasi prospektif independen; hasil evaluasi kelompok tambahan ada di bawah, sedangkan evaluasi waktu dan validasi prospektif masih diperlukan. Data disuntikkan dengan pola yang diketahui; cloning ber-jitter kecil dapat terlalu mudah.
 
 ## Artefak dan batas Gate A
 
@@ -107,7 +107,7 @@ Seluruh sumber dan generator sama berdasarkan SHA256. Split per klaim dapat berb
 - `reports/`: laporan Gate A, snapshot metrik, sanity terarah, manifest reproduksi, audit dan riwayat simetris.
 - `web/public/data/`: lima JSON aktual tervalidasi, 3.000 klaim, 120 faskes, sekitar 2,80 MB (<6 MB). Summary/faskes mencakup seluruh cohort; antrean hanya 3.000 teratas. Matriks evaluasi UI tidak boleh diklaim mewakili seluruh dataset bila hanya memakai subset ini.
 
-Seluruh berkas dashboard di luar lima JSON tetap sama. **QA integrasi dashboard, pembaruan screenshot/dokumentasi frontend dan deploy belum dijalankan; menunggu konfirmasi Gate A.**
+Pada checkpoint Gate A awal, seluruh berkas dashboard di luar lima JSON tetap sama. Gate A kemudian disetujui bersyarat pada 25 Oktober 2026; integrasi dan QA data aktual telah dijalankan. Lihat [laporan Gate C](../web/QA.md). **Belum deploy; menunggu konfirmasi Gate C.**
 
 <!-- grouped-eval -->
 ## Evaluasi tambahan per kelompok (25 Oktober 2026)

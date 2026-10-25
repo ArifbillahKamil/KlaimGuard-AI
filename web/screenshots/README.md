@@ -1,6 +1,6 @@
 # Screenshot KlaimGuard AI
 
-Semua layar memakai **data contoh sintetis**: 300 klaim, 12 faskes, seed 42. Skor, SHAP, dan metrik hanya ilustrasi antarmuka, **bukan hasil model atau klaim performa dunia nyata**.
+Semua layar diperbarui pada 25 Oktober 2026 memakai **ekspor ML aktual dari data sintetis**: 62.711 klaim sumber, 120 faskes, dan 3.000 klaim antrean. Skor OOF Gate A dipertahankan; metrik berasal dari JSON, termasuk evaluasi per kelompok. **Bukan data peserta JKN dan bukan klaim performa dunia nyata.**
 
 Desktop: 1440 × 1050 piksel; mobile: 390 × 844 piksel. Halaman diambil penuh hingga footer. Panel detail diambil sesuai ukuran viewport karena kontennya dapat digulir.
 
