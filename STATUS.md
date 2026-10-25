@@ -1,6 +1,6 @@
 # STATUS — KlaimGuard AI
 
-Terakhir diperbarui: 25 Oktober 2026 (oleh agent pembangun; QA selesai, menunggu Gate C)
+Terakhir diperbarui: 25 Oktober 2026 (oleh agent pembangun; Gate C disetujui, persiapan repo lokal)
 Deadline: **1 November 2026** (target submit 31 Oktober)
 
 > Agent: perbarui file ini setelah setiap tahap (centang, tanggal, temuan, keputusan).
@@ -51,7 +51,7 @@ Catatan agent kedua (24 Oktober 2026): pekerjaan dibatasi pada `web/` dan bagian
 
 ### Prompt 3 — Deploy & QA (`docs/03_PROMPT_DEPLOY_VERCEL_QA.md`)
 - [x] QA lokal dengan data ML aktual (build bersih, lima rute, filter, panel detail, keputusan, CSV, mobile 390 px)
-- [ ] **GATE C: laporan QA siap, menunggu konfirmasi Abil; belum disetujui**
+- [x] **GATE C: disetujui Abil setelah tugas persiapan repo ini; push dan deploy akan dijalankan Abil sendiri**
 - [ ] Deploy Vercel (Root Directory = `web`), uji URL produksi
 
 Checkpoint 25 Oktober 2026 setelah persetujuan Gate A bersyarat:
@@ -61,6 +61,8 @@ Checkpoint 25 Oktober 2026 setelah persetujuan Gate A bersyarat:
 - Build produksi TypeScript/Vite lolos; **15 kelompok QA browser lolos, 0 error console/runtime tak terduga**. Lima rute desktop/mobile 390 px dan panel detail diperiksa; filter/pencarian/urut, keputusan persisten, CSV BOM/quoting/newline/antiformula, storage rusak/ditolak, error/retry/empty dan axe WCAG A/AA lolos. Maksimum 17 baris DOM saat menggeser tabel 3.000 baris; median frame 16,7 ms, p95 17,4 ms, maksimum 24,5 ms; pencarian 15 ms pada mesin lokal. Dua belas screenshot diambil ulang memakai data ML aktual.
 - Lighthouse 13.5.0, **satu run per skenario**: Ringkasan desktop **100/100/100**, Antrean desktop **100/100/100**, Ringkasan mobile **88/100/100**, Antrean mobile **89/100/100** (Performance/Accessibility/Best Practices). LCP mobile 3,775/3,698 detik; mobile belum mencapai 90. Kondisi throttling dan hasil lengkap di `web/QA.md` serta `web/qa-report.json`. Tidak memilih hasil terbaik dari pengulangan.
 - Temuan QA: overflow mobile dari label aksesibilitas diperbaiki. Matriks evaluasi hanya subset 3.000 ekspor; budget 5% mencakup 3.136 klaim sehingga nol FN/TN pada subset bukan bukti cakupan seluruh dataset. UI menjelaskan keterbatasan ini. Tidak ada tuning, perubahan dataset/generator, penggantian skor antrean atau deployment. **Berhenti di Gate C.**
+
+Tambahan setelah persetujuan Gate C (25 Oktober 2026): kartu simulasi Ringkasan kini mempunyai satu baris sampling acak dan dua baris KlaimGuard: validasi per klaim dan validasi faskes ditahan (lebih ketat), semuanya dari JSON. Faskes ditahan: recall 72,45%, precision 64,32%, sekitar 1,6 klaim per kasus; skor antrean tidak diganti. Build dan 15 kelompok QA lolos, termasuk perhitungan semua sel kartu dan screenshot desktop/mobile yang diperbarui. Optimasi lazy dan kesiapan repo sedang dikerjakan. Tidak push atau deploy oleh agent.
 
 ## Jadwal target
 | Tanggal | Pekerjaan |

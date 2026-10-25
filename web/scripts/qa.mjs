@@ -59,12 +59,17 @@ try {
     await go('/')
     const rows = page.locator('.budget-table tbody tr')
     const percent = value => new Intl.NumberFormat('id-ID', { style: 'percent', maximumFractionDigits: 2 }).format(value)
-    assert.ok((await rows.nth(0).innerText()).includes(percent(report.at_budget['5'].recall.hybrid)))
-    assert.ok((await rows.nth(1).innerText()).includes(percent(summary.dataset.fraud_rate)))
-    assert.ok((await rows.nth(1).innerText()).includes(percent(report.at_budget['5'].precision.hybrid)))
     const inverse = value => new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 }).format(1 / value)
-    assert.ok((await rows.nth(2).innerText()).includes(inverse(summary.dataset.fraud_rate)))
-    assert.ok((await rows.nth(2).innerText()).includes(inverse(report.at_budget['5'].precision.hybrid)))
+    const expected = [
+      ['Sampling acak', 5 / 100, summary.dataset.fraud_rate],
+      ['Validasi per klaim', report.at_budget['5'].recall.hybrid, report.at_budget['5'].precision.hybrid],
+      ['Validasi faskes ditahan (lebih ketat)', report.grouped_eval.faskes_id.at_budget['5'].recall.hybrid, report.grouped_eval.faskes_id.at_budget['5'].precision.hybrid],
+    ]
+    assert.equal(await rows.count(), expected.length)
+    for (const [i, [label, recall, precision]] of expected.entries()) {
+      assert.ok((await rows.nth(i).locator('th').innerText()).includes(label))
+      assert.deepEqual(await rows.nth(i).locator('td > .performance-value').evaluateAll(nodes => nodes.map(n => n.firstChild.textContent)), [percent(recall), percent(precision), inverse(precision)])
+    }
     await go('/evaluasi')
     await page.getByText(/Hybrid belum unggul atas xgb_only/).waitFor()
     await page.getByText('Pola yang belum pernah dilihat sebagian besar tidak tertangkap model supervised.', { exact: true }).waitFor()
