@@ -9,7 +9,7 @@ Versi 25 Oktober 2026 memakai lima JSON hasil pipeline ML: 62.711 klaim sumber, 
 Node.js 20+ dan npm untuk aplikasi; alat QA Lighthouse 13.5 membutuhkan Node.js >=22.19. Sesi QA memakai Node.js 24.20.0. Versi dependensi dikunci pada `package-lock.json`.
 
 ```powershell
-cd "C:\Users\diamo\Documents\VSC\Hackaton\BPJS Healtkathon\web"
+cd "<folder proyek>\web"
 npm ci
 npm run dev
 ```
@@ -37,12 +37,13 @@ Faskes dan Evaluasi dimuat secara lazy; grafik memakai SVG. TanStack Virtual mem
 
 ## Semua angka dari JSON
 
-UI melakukan `fetch` lima berkas `public/data/`: `summary.json`, `claims_flagged.json`, `faskes_risk.json`, `model_report.json`, `feature_dictionary.json`. Tidak ada hardcode metrik atau jumlah klaim dalam komponen. Pilihan anggaran 2/5/10% adalah skenario yang ditetapkan; nilainya dibaca dari JSON.
+UI membaca empat JSON agregat/metrik saat awal: `summary.json`, `faskes_risk.json`, `model_report.json`, `feature_dictionary.json`. `claims_flagged.json` baru diminta ketika rute Antrean dibuka, dengan cache memori sesi serta abort/retry. Ringkasan mengarahkan pemeriksaan klaim ke Antrean; Faskes dan matriks Evaluasi memberi penjelasan bila klaim belum dimuat. Tidak ada hardcode metrik atau jumlah klaim dalam komponen. Pilihan anggaran 2/5/10% adalah skenario yang ditetapkan; nilainya dibaca dari JSON.
 
 Simulasi anggaran 5% dihitung saat render:
 
-- Kasus tertangkap: ekspektasi sampling acak `5/100` dibanding `model_report.at_budget["5"].recall.hybrid`.
-- Proporsi klaim terperiksa yang berlabel bermasalah: `dataset.fraud_rate` dibanding precision hybrid pada anggaran tersebut.
+- Satu baris acak: recall `5/100`, precision `dataset.fraud_rate`.
+- KlaimGuard validasi per klaim: recall/precision dari `model_report.at_budget["5"]`, varian hybrid.
+- KlaimGuard validasi faskes ditahan (lebih ketat): recall/precision dari `model_report.grouped_eval.faskes_id.at_budget["5"]`, varian hybrid.
 - Klaim diperiksa per kasus ditemukan: kebalikan base rate atau precision; denominator nol ditampilkan sebagai tidak tersedia.
 
 Simulasi bukan eksperimen sampling baru, proyeksi penghematan, atau klaim performa dunia nyata. Label **"Data sintetis | validasi silang 5-fold"** terlihat pada setiap kelompok angka performa; tiap nilai juga membawa label itu pada tooltip dan teks pembaca layar. Fold dibaca dari konfigurasi JSON.
@@ -67,7 +68,7 @@ node scripts/performance.mjs
 
 QA memakai data ML aktual: kontrak dan perhitungan simulasi, semua rute, filter, pengurutan, gulir 3.000 klaim, panel detail, keputusan, CSV, Mode Evaluasi, storage gagal, JSON gagal, loading/empty, aksesibilitas otomatis serta mobile 390 px. Negative test jaringan dijalankan terpisah dari pemeriksaan console normal.
 
-Lighthouse mengukur **Ringkasan dan Antrean pada desktop dan mobile**, masing-masing satu run, dengan browser baru. Desktop: RTT 40 ms / 10.240 Kbps / CPU 1x. Mobile: RTT 150 ms / 1.638,4 Kbps / CPU 4x, viewport 390 × 844. Seluruh hasil disimpan; bukan pemilihan skor terbaik dari beberapa run.
+Skrip Lighthouse default mengukur Ringkasan dan Antrean desktop/mobile; `--mobile-only --label=local` membatasi dua skenario mobile dan menyimpan hasil terpisah. Tugas optimasi terakhir mengukur satu run sebelum dan satu sesudah untuk setiap halaman mobile; seluruhnya tersimpan pada [performance-comparison.json](performance-comparison.json). Ringkasan 87 -> 98; Antrean 88 -> 88. Desktop 100/100/100 adalah hasil Gate C sebelumnya, tidak diukur ulang pada tugas optimasi ini. Desktop: RTT 40 ms / 10.240 Kbps / CPU 1x. Mobile: RTT 150 ms / 1.638,4 Kbps / CPU 4x, viewport 390 × 844. Ini bukan pemilihan skor terbaik dari beberapa run.
 
 Hasil dan batas pengukuran: [QA.md](QA.md), `qa-report.json`; 12 screenshot aktual dan indeks di [screenshots/](screenshots/README.md). Laporan mentah Lighthouse dan CSV uji ada pada `qa-results/` yang diabaikan Git.
 
@@ -75,4 +76,4 @@ Generator contoh lama tidak dijalankan oleh dev/build dan menolak menimpa ekspor
 
 ## Batas pekerjaan
 
-Data sintetis dengan pola disuntikkan, evaluasi transduktif, dan perubahan overlap berdasarkan data penuh belum memvalidasi performa dunia nyata. Penerapan on-premise, akses berbasis peran dan audit trail terpusat masih rencana. **Berhenti di Gate C; belum deploy Vercel.**
+Data sintetis dengan pola disuntikkan, evaluasi transduktif, dan perubahan overlap berdasarkan data penuh belum memvalidasi performa dunia nyata. Penerapan on-premise, akses berbasis peran dan audit trail terpusat masih rencana. **Gate C disetujui. Agent tidak push atau deploy; Abil melanjutkan melalui [DEPLOY.md](../DEPLOY.md).**

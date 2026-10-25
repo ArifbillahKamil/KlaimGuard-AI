@@ -47,7 +47,7 @@
   },
   "reproduction": {
     "passed": true,
-    "reference": "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\ml\\artifacts",
+    "reference": "<folder proyek>\\ml\\artifacts",
     "checks": {
       "oof_predictions.npz:if_only": true,
       "oof_predictions.npz:xgb_only": true,

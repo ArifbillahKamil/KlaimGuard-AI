@@ -2,7 +2,7 @@
 
 **Semua data sintetis, bukan data peserta JKN. Angka performa bukan klaim performa dunia nyata. Skor nantinya hanya rekomendasi prioritas; keputusan akhir tetap pada auditor manusia.**
 
-Status: **Prompt 1 selesai, berhenti di Gate A dan menunggu konfirmasi Abil**. Pipeline benar-benar dijalankan dari CSV hingga lima JSON. Lihat [laporan Gate A lengkap](reports/GATE_A.md), [snapshot metrik](reports/model_report.json), dan [bukti reproduksi](reports/pipeline_manifest.json).
+Status: **Prompt 1 selesai; Gate A dan Gate C sudah disetujui. Push dan deploy akan dilakukan Abil.** Pipeline benar-benar dijalankan dari CSV hingga lima JSON. Lihat [laporan Gate A lengkap](reports/GATE_A.md), [snapshot metrik](reports/model_report.json), dan [bukti reproduksi](reports/pipeline_manifest.json).
 
 Keputusan Abil dan Claude: ekspektasi lama pada definisi simetris diganti karena kedua klaim dalam pasangan ikut tertandai. Definisi terarah dipilih **setelah membandingkan dua definisi pada data penuh**, bukan sebelum melihat data. Ini keputusan desain berbasis data yang membatasi independensi evaluasi dan akan dicantumkan pada laporan model. Dataset dan generator tidak diubah. [Laporan penghentian awal](reports/FEATURE_SANITY.md) disimpan sebagai riwayat.
 
@@ -11,7 +11,7 @@ Keputusan Abil dan Claude: ekspektasi lama pada definisi simetris diganti karena
 Gunakan **Python 3.12+** untuk requirements yang dipin pada hasil ini; sesi memakai Python 3.12.6. Batas awal brief adalah Python >=3.10, tetapi metadata NumPy 2.5.4, XGBoost 3.4.1, dan SHAP 0.54.1 yang terpasang mensyaratkan >=3.12. Versi terpasang dipin bersama dependensinya dalam `requirements.txt`.
 
 ```powershell
-cd "C:\Users\diamo\Documents\VSC\Hackaton\BPJS Healtkathon\ml"
+cd "<folder proyek>\ml"
 $env:PYTHONUTF8 = "1"
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
@@ -107,7 +107,7 @@ Seluruh sumber dan generator sama berdasarkan SHA256. Split per klaim dapat berb
 - `reports/`: laporan Gate A, snapshot metrik, sanity terarah, manifest reproduksi, audit dan riwayat simetris.
 - `web/public/data/`: lima JSON aktual tervalidasi, 3.000 klaim, 120 faskes, sekitar 2,80 MB (<6 MB). Summary/faskes mencakup seluruh cohort; antrean hanya 3.000 teratas. Matriks evaluasi UI tidak boleh diklaim mewakili seluruh dataset bila hanya memakai subset ini.
 
-Pada checkpoint Gate A awal, seluruh berkas dashboard di luar lima JSON tetap sama. Gate A kemudian disetujui bersyarat pada 25 Oktober 2026; integrasi dan QA data aktual telah dijalankan. Lihat [laporan Gate C](../web/QA.md). **Belum deploy; menunggu konfirmasi Gate C.**
+Pada checkpoint Gate A awal, seluruh berkas dashboard di luar lima JSON tetap sama. Gate A kemudian disetujui bersyarat pada 25 Oktober 2026; integrasi dan QA data aktual telah dijalankan. Lihat [laporan QA](../web/QA.md). **Gate C disetujui; agent tidak push/deploy, publikasi dilanjutkan Abil melalui [DEPLOY.md](../DEPLOY.md).**
 
 <!-- grouped-eval -->
 ## Evaluasi tambahan per kelompok (25 Oktober 2026)

@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-25T04:18:48.931Z",
+  "generated_at": "2026-10-25T05:38:03.670Z",
   "data_source": "ml_oof",
   "browser_qa": {
-    "passed": 15,
+    "passed": 16,
     "checks": [
       "Actual ML JSON: 3000/62711 claims, 120 facilities, grouped metrics, privacy and integrity",
       "Desktop /: direct route, no overflow, WCAG A/AA, actual-data screenshot",
@@ -18,6 +18,7 @@
       "Mobile 390px: five actual-data routes/screenshots, WCAG A/AA, no page overflow, working navigation/detail",
       "Corrupt/unavailable localStorage gracefully handled",
       "Intentional JSON failure/retry, malformed schema, loading and empty states",
+      "Lazy claims: no requests outside Antrean, cache reuse, cold evaluation and failed/aborted request recovery",
       "Unknown hash route offers recovery"
     ],
     "runtimeErrors": [],
@@ -30,175 +31,187 @@
     "measurements": {
       "virtual_scroll": {
         "frames": 100,
-        "median_ms": 16.699999999254942,
-        "p95_ms": 17.40000000037253,
-        "max_ms": 24.5,
+        "median_ms": 16.600000001490116,
+        "p95_ms": 18.799999998882413,
+        "max_ms": 23.40000000037253,
         "max_dom_rows": 17
       },
-      "search_ms": 15
+      "search_ms": 14
     }
   },
-  "performance": {
-    "data": "actual synthetic ML export, 3000 claims",
-    "runs_per_case": 1,
-    "results": [
-      {
-        "page": "ringkasan",
-        "hash": "#/",
-        "device": "desktop",
-        "finalUrl": "http://127.0.0.1:4173/#/",
-        "lighthouse_version": "13.5.0",
-        "categories": {
-          "performance": 100,
-          "accessibility": 100,
-          "best-practices": 100
+  "performance_comparison": {
+    "experiment_start_utc": "2026-10-25 05:22:18 UTC",
+    "experiment_end_utc": "2026-10-25 05:27:04 UTC",
+    "timebox_minutes": 30,
+    "decision": "keep: overview improves, queue performance unchanged, QA passes",
+    "before": {
+      "data": "actual synthetic ML export, 3000 claims",
+      "runs_per_case": 1,
+      "results": [
+        {
+          "page": "ringkasan",
+          "hash": "#/",
+          "device": "mobile",
+          "finalUrl": "http://127.0.0.1:4173/#/",
+          "lighthouse_version": "13.5.0",
+          "categories": {
+            "performance": 87,
+            "accessibility": 100,
+            "best-practices": 100
+          },
+          "fcp_ms": 1659.0168,
+          "lcp_ms": 3926.5252,
+          "tbt_ms": 10,
+          "cls": 0.00001571442454194765,
+          "warnings": [],
+          "failing_audits": [
+            {
+              "id": "unused-javascript",
+              "score": 0,
+              "title": "Reduce unused JavaScript"
+            },
+            {
+              "id": "bf-cache",
+              "score": 0,
+              "title": "Page prevented back/forward cache restoration"
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "score": 0,
+              "title": "Network dependency tree"
+            },
+            {
+              "id": "render-blocking-insight",
+              "score": 0,
+              "title": "Render-blocking requests"
+            }
+          ]
         },
-        "fcp_ms": 406.5625,
-        "lcp_ms": 772.84375,
-        "tbt_ms": 0,
-        "cls": 0.00005941195120746987,
-        "warnings": [],
-        "failing_audits": [
-          {
-            "id": "unused-javascript",
-            "score": 0,
-            "title": "Reduce unused JavaScript"
+        {
+          "page": "antrean",
+          "hash": "#/antrean",
+          "device": "mobile",
+          "finalUrl": "http://127.0.0.1:4173/#/antrean",
+          "lighthouse_version": "13.5.0",
+          "categories": {
+            "performance": 88,
+            "accessibility": 100,
+            "best-practices": 100
           },
-          {
-            "id": "bf-cache",
-            "score": 0,
-            "title": "Page prevented back/forward cache restoration"
+          "fcp_ms": 1657.8109,
+          "lcp_ms": 3849.71635,
+          "tbt_ms": 23,
+          "cls": 0.00001982974425710368,
+          "warnings": [],
+          "failing_audits": [
+            {
+              "id": "unused-javascript",
+              "score": 0,
+              "title": "Reduce unused JavaScript"
+            },
+            {
+              "id": "bf-cache",
+              "score": 0,
+              "title": "Page prevented back/forward cache restoration"
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "score": 0,
+              "title": "Network dependency tree"
+            },
+            {
+              "id": "render-blocking-insight",
+              "score": 0,
+              "title": "Render-blocking requests"
+            }
+          ]
+        }
+      ]
+    },
+    "after": {
+      "data": "actual synthetic ML export, 3000 claims",
+      "runs_per_case": 1,
+      "results": [
+        {
+          "page": "ringkasan",
+          "hash": "#/",
+          "device": "mobile",
+          "finalUrl": "http://127.0.0.1:4173/#/",
+          "lighthouse_version": "13.5.0",
+          "categories": {
+            "performance": 98,
+            "accessibility": 100,
+            "best-practices": 100
           },
-          {
-            "id": "network-dependency-tree-insight",
-            "score": 0,
-            "title": "Network dependency tree"
-          },
-          {
-            "id": "render-blocking-insight",
-            "score": 0.5,
-            "title": "Render-blocking requests"
-          }
-        ]
-      },
-      {
-        "page": "antrean",
-        "hash": "#/antrean",
-        "device": "desktop",
-        "finalUrl": "http://127.0.0.1:4173/#/antrean",
-        "lighthouse_version": "13.5.0",
-        "categories": {
-          "performance": 100,
-          "accessibility": 100,
-          "best-practices": 100
+          "fcp_ms": 1656.7264,
+          "lcp_ms": 2270.0896000000002,
+          "tbt_ms": 0,
+          "cls": 0,
+          "warnings": [],
+          "failing_audits": [
+            {
+              "id": "unused-javascript",
+              "score": 0,
+              "title": "Reduce unused JavaScript"
+            },
+            {
+              "id": "bf-cache",
+              "score": 0,
+              "title": "Page prevented back/forward cache restoration"
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "score": 0,
+              "title": "Network dependency tree"
+            },
+            {
+              "id": "render-blocking-insight",
+              "score": 0,
+              "title": "Render-blocking requests"
+            }
+          ]
         },
-        "fcp_ms": 409.0861,
-        "lcp_ms": 756.62915,
-        "tbt_ms": 0,
-        "cls": 0.00006204516788148516,
-        "warnings": [],
-        "failing_audits": [
-          {
-            "id": "unused-javascript",
-            "score": 0,
-            "title": "Reduce unused JavaScript"
+        {
+          "page": "antrean",
+          "hash": "#/antrean",
+          "device": "mobile",
+          "finalUrl": "http://127.0.0.1:4173/#/antrean",
+          "lighthouse_version": "13.5.0",
+          "categories": {
+            "performance": 88,
+            "accessibility": 100,
+            "best-practices": 100
           },
-          {
-            "id": "bf-cache",
-            "score": 0,
-            "title": "Page prevented back/forward cache restoration"
-          },
-          {
-            "id": "network-dependency-tree-insight",
-            "score": 0,
-            "title": "Network dependency tree"
-          },
-          {
-            "id": "render-blocking-insight",
-            "score": 0.5,
-            "title": "Render-blocking requests"
-          }
-        ]
-      },
-      {
-        "page": "ringkasan",
-        "hash": "#/",
-        "device": "mobile",
-        "finalUrl": "http://127.0.0.1:4173/#/",
-        "lighthouse_version": "13.5.0",
-        "categories": {
-          "performance": 88,
-          "accessibility": 100,
-          "best-practices": 100
-        },
-        "fcp_ms": 1657.7035,
-        "lcp_ms": 3774.5552500000003,
-        "tbt_ms": 3,
-        "cls": 0.00001571442454194765,
-        "warnings": [],
-        "failing_audits": [
-          {
-            "id": "unused-javascript",
-            "score": 0,
-            "title": "Reduce unused JavaScript"
-          },
-          {
-            "id": "bf-cache",
-            "score": 0,
-            "title": "Page prevented back/forward cache restoration"
-          },
-          {
-            "id": "network-dependency-tree-insight",
-            "score": 0,
-            "title": "Network dependency tree"
-          },
-          {
-            "id": "render-blocking-insight",
-            "score": 0,
-            "title": "Render-blocking requests"
-          }
-        ]
-      },
-      {
-        "page": "antrean",
-        "hash": "#/antrean",
-        "device": "mobile",
-        "finalUrl": "http://127.0.0.1:4173/#/antrean",
-        "lighthouse_version": "13.5.0",
-        "categories": {
-          "performance": 89,
-          "accessibility": 100,
-          "best-practices": 100
-        },
-        "fcp_ms": 1657.8101,
-        "lcp_ms": 3697.71515,
-        "tbt_ms": 49.99999999999977,
-        "cls": 0.00001982974425710368,
-        "warnings": [],
-        "failing_audits": [
-          {
-            "id": "unused-javascript",
-            "score": 0,
-            "title": "Reduce unused JavaScript"
-          },
-          {
-            "id": "bf-cache",
-            "score": 0,
-            "title": "Page prevented back/forward cache restoration"
-          },
-          {
-            "id": "network-dependency-tree-insight",
-            "score": 0,
-            "title": "Network dependency tree"
-          },
-          {
-            "id": "render-blocking-insight",
-            "score": 0,
-            "title": "Render-blocking requests"
-          }
-        ]
-      }
-    ]
+          "fcp_ms": 1656.6187999999997,
+          "lcp_ms": 3759.9282,
+          "tbt_ms": 8,
+          "cls": 0.00001982974425710368,
+          "warnings": [],
+          "failing_audits": [
+            {
+              "id": "unused-javascript",
+              "score": 0,
+              "title": "Reduce unused JavaScript"
+            },
+            {
+              "id": "bf-cache",
+              "score": 0,
+              "title": "Page prevented back/forward cache restoration"
+            },
+            {
+              "id": "network-dependency-tree-insight",
+              "score": 0,
+              "title": "Network dependency tree"
+            },
+            {
+              "id": "render-blocking-insight",
+              "score": 0,
+              "title": "Render-blocking requests"
+            }
+          ]
+        }
+      ]
+    }
   },
   "grouped_eval": {
     "faskes_id": {
@@ -354,26 +367,65 @@
       "inner_group_overlap": 0
     }
   },
-  "protected_originals_unchanged": true,
+  "repository_audit": {
+    "publication_files_scanned": 94,
+    "historical_blobs_scanned": 166,
+    "credential_pattern_findings": 0,
+    "forbidden_paths": 0,
+    "workstation_document_paths": 0,
+    "ignore_examples_checked": [
+      "ml/artifacts/model.bin",
+      "qa-results/run.json",
+      "web/qa-results/run.json",
+      "web/node_modules/a/index.js",
+      "ml/.venv/pyvenv.cfg",
+      "web/dist/index.html",
+      ".env",
+      ".env.local",
+      "web/.env.production"
+    ],
+    "approved_export_lf_normalized_sha256": {
+      "web/public/data/claims_flagged.json": "31e6b01c8b3e99683628b7a9d81a51be340cd91e5243c9c9bc72a66be1ef0c96",
+      "web/public/data/faskes_risk.json": "07a8ec00eb9aa3c0a440a29e70aea562038f492a6b6f3eebfd45cb03788c9ffe",
+      "web/public/data/feature_dictionary.json": "5dc1d7777e50809f12b10666e54b7768d6c8af53f0a736a532e786e6f52fa12e",
+      "web/public/data/model_report.json": "776e1932c4328430e1771d1c8727683a038161e210a6f9cec79d3c72182804b8",
+      "web/public/data/summary.json": "b12a55c28693b5f3e5f7c68cbebfd67b843abb3d1f2da4b194b67963e55b3c7d"
+    },
+    "current_export_raw_sha256": {
+      "web/public/data/claims_flagged.json": "f5b3bc3c0dffecd8fc0e2c3222319c84d77751b67fec0c29e40ca0cd00e3379e",
+      "web/public/data/faskes_risk.json": "c6b626a282bc3cb450f115c9cef54477889a53592746b7eb2dd01b3957d310d7",
+      "web/public/data/feature_dictionary.json": "7f37cd50921ac76cc2ca81f99d12a738378745eee111d68c3fdb5bb6c49adca6",
+      "web/public/data/model_report.json": "89987e3ca57052ec9f3b332559db5efc72e90330125b04c98f6eaddf7f40dbaf",
+      "web/public/data/summary.json": "fe43bd9a5c7699dd684f13573e5a371a4ec4f3a1c8260f7abfeddc4117d5ad01"
+    },
+    "all_five_export_files_unchanged": true,
+    "scope": "Current publication files, all reachable Git-history blobs and local Git config; heuristic patterns, not a guarantee against every possible secret.",
+    "git_count_objects": "count: 260\nsize: 9.30 MiB\nin-pack: 0\npacks: 0\nsize-pack: 0 bytes\nprune-packable: 0\ngarbage: 0\nsize-garbage: 0 bytes"
+  },
   "protected_sha256": {
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\claims_flagged.json": "f5b3bc3c0dffecd8fc0e2c3222319c84d77751b67fec0c29e40ca0cd00e3379e",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\summary.json": "fe43bd9a5c7699dd684f13573e5a371a4ec4f3a1c8260f7abfeddc4117d5ad01",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\faskes_risk.json": "c6b626a282bc3cb450f115c9cef54477889a53592746b7eb2dd01b3957d310d7",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\feature_dictionary.json": "7f37cd50921ac76cc2ca81f99d12a738378745eee111d68c3fdb5bb6c49adca6",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\ml\\artifacts\\final_run\\oof_predictions.npz": "2337681281fd348d8243067193d8cdfe730b8681bd8d303ae72099bce2f92814",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\ml\\artifacts\\final_run\\shap_values.npy": "46e04e42fe3591c6eae520421c13c3216beb2e5c4dfac822bacf93b7b29d3a0b"
+    "web/public/data/claims_flagged.json": "f5b3bc3c0dffecd8fc0e2c3222319c84d77751b67fec0c29e40ca0cd00e3379e",
+    "web/public/data/summary.json": "fe43bd9a5c7699dd684f13573e5a371a4ec4f3a1c8260f7abfeddc4117d5ad01",
+    "web/public/data/faskes_risk.json": "c6b626a282bc3cb450f115c9cef54477889a53592746b7eb2dd01b3957d310d7",
+    "web/public/data/feature_dictionary.json": "7f37cd50921ac76cc2ca81f99d12a738378745eee111d68c3fdb5bb6c49adca6",
+    "ml/artifacts/final_run/oof_predictions.npz": "2337681281fd348d8243067193d8cdfe730b8681bd8d303ae72099bce2f92814",
+    "ml/artifacts/final_run/shap_values.npy": "46e04e42fe3591c6eae520421c13c3216beb2e5c4dfac822bacf93b7b29d3a0b"
+  },
+  "local_artifact_checks": {
+    "web/public/data/claims_flagged.json": "unchanged",
+    "web/public/data/summary.json": "unchanged",
+    "web/public/data/faskes_risk.json": "unchanged",
+    "web/public/data/feature_dictionary.json": "unchanged",
+    "ml/artifacts/final_run/oof_predictions.npz": "unchanged",
+    "ml/artifacts/final_run/shap_values.npy": "unchanged"
   },
   "model_tuning": false,
-  "deployment": "not performed; waiting at Gate C",
+  "gate_c": "approved",
+  "deployment": "not performed by agent; Abil will publish",
   "ui_text_changes": [
-    "Ringkasan: kartu \"Simulasi anggaran pemeriksaan 5%\" membandingkan recall, precision/base rate, dan kebalikan rate; semua angka dihitung dari JSON.",
-    "Angka performa: label \"Data sintetis | validasi silang 5-fold\" terlihat per kelompok metrik dan melekat pada setiap nilai lewat tooltip serta teks pembaca layar.",
-    "Evaluasi: tabel AP/recall/precision ketiga varian dan catatan \"Hybrid belum unggul atas xgb_only pada AP evaluasi per klaim ini\".",
-    "Hold-out: penjelasan \"Pola yang belum pernah dilihat sebagian besar tidak tertangkap model supervised\"; tidak mengklaim hybrid unggul secara umum.",
-    "Evaluasi per kelompok: tabel faskes/pasien, recall per jenis, dan satu kalimat batas transduktif per skema.",
-    "Batasan: data sintetis, pola disuntikkan, overlap terarah dipilih setelah melihat data penuh, evaluasi transduktif dan risiko false positive.",
-    "Antrean: \"3.000 klaim teratas dari 62.711\" dari JSON; default Mode Evaluasi tetap tersembunyi; skor sama menjaga urutan ekspor.",
-    "Matriks: menjelaskan subset ekspor dan bahwa nol FN/TN ketika seluruh subset diprioritaskan bukan bukti semua kasus dataset tertangkap.",
-    "Tata Kelola: paragraf retraining berkala dan jalur anomali terpisah sebagai rencana pengembangan untuk pola baru."
+    "Simulasi 5%: satu baris acak, KlaimGuard validasi per klaim, dan KlaimGuard validasi faskes ditahan (lebih ketat); recall/precision dan kebalikan precision dihitung dari JSON.",
+    "Ringkasan: tautan ke Antrean mengganti daftar detail klaim agar payload klaim tidak diminta di jalur awal.",
+    "Faskes dan Evaluasi: jelaskan saat klaim belum dimuat; matriks tidak menampilkan nol palsu dan dapat dibuka setelah mengunjungi Antrean.",
+    "Label performa tetap Data sintetis | validasi silang 5-fold; hybrid belum unggul atas xgb_only pada AP evaluasi per klaim.",
+    "Hold-out, batas transduktif, overlap yang dipilih setelah melihat data penuh, subset matriks dan rencana retraining/jalur anomali tetap dinyatakan jujur."
   ]
 }

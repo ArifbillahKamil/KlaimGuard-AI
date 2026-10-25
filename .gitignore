@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+ml/artifacts/
+.ipynb_checkpoints/
+
+# Node / web
+node_modules/
+web/dist/
+qa-results/
+.vercel/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.env*
+.aws/
+.ssh/

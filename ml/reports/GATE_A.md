@@ -140,7 +140,7 @@ Durasi tahap run penuh:
 ## 6. Reproduksi dan berkas
 
 ```powershell
-cd "C:\Users\diamo\Documents\VSC\Hackaton\BPJS Healtkathon\ml"
+cd "<folder proyek>\ml"
 $env:PYTHONUTF8 = "1"
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt

@@ -1,0 +1,174 @@
+{
+  "experiment_start_utc": "2026-10-25 05:22:18 UTC",
+  "experiment_end_utc": "2026-10-25 05:27:04 UTC",
+  "timebox_minutes": 30,
+  "decision": "keep: overview improves, queue performance unchanged, QA passes",
+  "before": {
+    "data": "actual synthetic ML export, 3000 claims",
+    "runs_per_case": 1,
+    "results": [
+      {
+        "page": "ringkasan",
+        "hash": "#/",
+        "device": "mobile",
+        "finalUrl": "http://127.0.0.1:4173/#/",
+        "lighthouse_version": "13.5.0",
+        "categories": {
+          "performance": 87,
+          "accessibility": 100,
+          "best-practices": 100
+        },
+        "fcp_ms": 1659.0168,
+        "lcp_ms": 3926.5252,
+        "tbt_ms": 10,
+        "cls": 0.00001571442454194765,
+        "warnings": [],
+        "failing_audits": [
+          {
+            "id": "unused-javascript",
+            "score": 0,
+            "title": "Reduce unused JavaScript"
+          },
+          {
+            "id": "bf-cache",
+            "score": 0,
+            "title": "Page prevented back/forward cache restoration"
+          },
+          {
+            "id": "network-dependency-tree-insight",
+            "score": 0,
+            "title": "Network dependency tree"
+          },
+          {
+            "id": "render-blocking-insight",
+            "score": 0,
+            "title": "Render-blocking requests"
+          }
+        ]
+      },
+      {
+        "page": "antrean",
+        "hash": "#/antrean",
+        "device": "mobile",
+        "finalUrl": "http://127.0.0.1:4173/#/antrean",
+        "lighthouse_version": "13.5.0",
+        "categories": {
+          "performance": 88,
+          "accessibility": 100,
+          "best-practices": 100
+        },
+        "fcp_ms": 1657.8109,
+        "lcp_ms": 3849.71635,
+        "tbt_ms": 23,
+        "cls": 0.00001982974425710368,
+        "warnings": [],
+        "failing_audits": [
+          {
+            "id": "unused-javascript",
+            "score": 0,
+            "title": "Reduce unused JavaScript"
+          },
+          {
+            "id": "bf-cache",
+            "score": 0,
+            "title": "Page prevented back/forward cache restoration"
+          },
+          {
+            "id": "network-dependency-tree-insight",
+            "score": 0,
+            "title": "Network dependency tree"
+          },
+          {
+            "id": "render-blocking-insight",
+            "score": 0,
+            "title": "Render-blocking requests"
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "data": "actual synthetic ML export, 3000 claims",
+    "runs_per_case": 1,
+    "results": [
+      {
+        "page": "ringkasan",
+        "hash": "#/",
+        "device": "mobile",
+        "finalUrl": "http://127.0.0.1:4173/#/",
+        "lighthouse_version": "13.5.0",
+        "categories": {
+          "performance": 98,
+          "accessibility": 100,
+          "best-practices": 100
+        },
+        "fcp_ms": 1656.7264,
+        "lcp_ms": 2270.0896000000002,
+        "tbt_ms": 0,
+        "cls": 0,
+        "warnings": [],
+        "failing_audits": [
+          {
+            "id": "unused-javascript",
+            "score": 0,
+            "title": "Reduce unused JavaScript"
+          },
+          {
+            "id": "bf-cache",
+            "score": 0,
+            "title": "Page prevented back/forward cache restoration"
+          },
+          {
+            "id": "network-dependency-tree-insight",
+            "score": 0,
+            "title": "Network dependency tree"
+          },
+          {
+            "id": "render-blocking-insight",
+            "score": 0,
+            "title": "Render-blocking requests"
+          }
+        ]
+      },
+      {
+        "page": "antrean",
+        "hash": "#/antrean",
+        "device": "mobile",
+        "finalUrl": "http://127.0.0.1:4173/#/antrean",
+        "lighthouse_version": "13.5.0",
+        "categories": {
+          "performance": 88,
+          "accessibility": 100,
+          "best-practices": 100
+        },
+        "fcp_ms": 1656.6187999999997,
+        "lcp_ms": 3759.9282,
+        "tbt_ms": 8,
+        "cls": 0.00001982974425710368,
+        "warnings": [],
+        "failing_audits": [
+          {
+            "id": "unused-javascript",
+            "score": 0,
+            "title": "Reduce unused JavaScript"
+          },
+          {
+            "id": "bf-cache",
+            "score": 0,
+            "title": "Page prevented back/forward cache restoration"
+          },
+          {
+            "id": "network-dependency-tree-insight",
+            "score": 0,
+            "title": "Network dependency tree"
+          },
+          {
+            "id": "render-blocking-insight",
+            "score": 0,
+            "title": "Render-blocking requests"
+          }
+        ]
+      }
+    ]
+  }
+}

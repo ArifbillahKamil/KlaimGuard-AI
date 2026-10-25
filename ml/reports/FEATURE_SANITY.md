@@ -69,7 +69,7 @@ Recall per jenis fraud dan hold-out untuk keenam jenis belum tersedia. Tidak ada
 ## Reproduksi dan artefak
 
 ```powershell
-cd "C:\Users\diamo\Documents\VSC\Hackaton\BPJS Healtkathon\ml"
+cd "<folder proyek>\ml"
 $env:PYTHONUTF8 = "1"
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 .\.venv\Scripts\python.exe -m src.features

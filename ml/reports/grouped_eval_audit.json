@@ -1094,20 +1094,20 @@
     }
   ],
   "protected_sha256_before": {
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\claims_flagged.json": "f5b3bc3c0dffecd8fc0e2c3222319c84d77751b67fec0c29e40ca0cd00e3379e",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\summary.json": "fe43bd9a5c7699dd684f13573e5a371a4ec4f3a1c8260f7abfeddc4117d5ad01",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\faskes_risk.json": "c6b626a282bc3cb450f115c9cef54477889a53592746b7eb2dd01b3957d310d7",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\feature_dictionary.json": "7f37cd50921ac76cc2ca81f99d12a738378745eee111d68c3fdb5bb6c49adca6",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\ml\\artifacts\\final_run\\oof_predictions.npz": "2337681281fd348d8243067193d8cdfe730b8681bd8d303ae72099bce2f92814",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\ml\\artifacts\\final_run\\shap_values.npy": "46e04e42fe3591c6eae520421c13c3216beb2e5c4dfac822bacf93b7b29d3a0b"
+    "<folder proyek>\\web\\public\\data\\claims_flagged.json": "f5b3bc3c0dffecd8fc0e2c3222319c84d77751b67fec0c29e40ca0cd00e3379e",
+    "<folder proyek>\\web\\public\\data\\summary.json": "fe43bd9a5c7699dd684f13573e5a371a4ec4f3a1c8260f7abfeddc4117d5ad01",
+    "<folder proyek>\\web\\public\\data\\faskes_risk.json": "c6b626a282bc3cb450f115c9cef54477889a53592746b7eb2dd01b3957d310d7",
+    "<folder proyek>\\web\\public\\data\\feature_dictionary.json": "7f37cd50921ac76cc2ca81f99d12a738378745eee111d68c3fdb5bb6c49adca6",
+    "<folder proyek>\\ml\\artifacts\\final_run\\oof_predictions.npz": "2337681281fd348d8243067193d8cdfe730b8681bd8d303ae72099bce2f92814",
+    "<folder proyek>\\ml\\artifacts\\final_run\\shap_values.npy": "46e04e42fe3591c6eae520421c13c3216beb2e5c4dfac822bacf93b7b29d3a0b"
   },
   "protected_sha256_after": {
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\claims_flagged.json": "f5b3bc3c0dffecd8fc0e2c3222319c84d77751b67fec0c29e40ca0cd00e3379e",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\summary.json": "fe43bd9a5c7699dd684f13573e5a371a4ec4f3a1c8260f7abfeddc4117d5ad01",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\faskes_risk.json": "c6b626a282bc3cb450f115c9cef54477889a53592746b7eb2dd01b3957d310d7",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\web\\public\\data\\feature_dictionary.json": "7f37cd50921ac76cc2ca81f99d12a738378745eee111d68c3fdb5bb6c49adca6",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\ml\\artifacts\\final_run\\oof_predictions.npz": "2337681281fd348d8243067193d8cdfe730b8681bd8d303ae72099bce2f92814",
-    "C:\\Users\\diamo\\Documents\\VSC\\Hackaton\\BPJS Healtkathon\\ml\\artifacts\\final_run\\shap_values.npy": "46e04e42fe3591c6eae520421c13c3216beb2e5c4dfac822bacf93b7b29d3a0b"
+    "<folder proyek>\\web\\public\\data\\claims_flagged.json": "f5b3bc3c0dffecd8fc0e2c3222319c84d77751b67fec0c29e40ca0cd00e3379e",
+    "<folder proyek>\\web\\public\\data\\summary.json": "fe43bd9a5c7699dd684f13573e5a371a4ec4f3a1c8260f7abfeddc4117d5ad01",
+    "<folder proyek>\\web\\public\\data\\faskes_risk.json": "c6b626a282bc3cb450f115c9cef54477889a53592746b7eb2dd01b3957d310d7",
+    "<folder proyek>\\web\\public\\data\\feature_dictionary.json": "7f37cd50921ac76cc2ca81f99d12a738378745eee111d68c3fdb5bb6c49adca6",
+    "<folder proyek>\\ml\\artifacts\\final_run\\oof_predictions.npz": "2337681281fd348d8243067193d8cdfe730b8681bd8d303ae72099bce2f92814",
+    "<folder proyek>\\ml\\artifacts\\final_run\\shap_values.npy": "46e04e42fe3591c6eae520421c13c3216beb2e5c4dfac822bacf93b7b29d3a0b"
   },
   "ordinary_oof_and_exported_claim_scores_unchanged": true
 }
