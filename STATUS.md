@@ -22,7 +22,7 @@ Deadline: **1 November 2026** (target submit 31 Oktober)
 - [x] SHAP + teks alasan + aturan pola dugaan
 - [x] Ekspor JSON ke `web/public/data/` + validasi
 - [x] `run_all.py`, `requirements.txt` (pin), `ml/README.md`
-- [x] **GATE A: laporan lengkap siap; menunggu konfirmasi Abil sebelum QA integrasi dashboard**
+- [x] **GATE A: disetujui bersyarat oleh Abil pada 25 Oktober 2026; evaluasi kelompok dan integrasi dilanjutkan tanpa tuning model**
 
 Catatan Prompt 1 (24 Oktober 2026): preflight berhasil, Python 3.12.6; venv `ml/.venv`; NumPy 2.5.4, pandas 3.1.0, scikit-learn 1.9.1, XGBoost 3.4.1, SHAP 0.54.1, PyArrow 26.0.0. Versi terpasang dipin di `ml/requirements.txt`. Perubahan dashboard dilarang selain lima JSON ekspor di `web/public/data/`. Training hanya dilanjutkan jika sanity check fitur tidak meleset lebih dari 20%; dataset dan generator tidak diregenerasi atau diubah.
 

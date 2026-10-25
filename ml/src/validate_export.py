@@ -81,6 +81,19 @@ def validate_payloads(payloads: dict) -> dict:
     for section in (report["pr_auc"], *report["per_type_recall_at_5"].values(), *report["holdout"].values()):
         if set(section) != {"if_only", "xgb_only", "hybrid"} or any(not 0 <= v <= 1 for v in section.values()):
             raise AssertionError("Invalid model metric.")
+    for name, grouped in report.get("grouped_eval", {}).items():
+        if name not in ("faskes_id", "patient_id") or grouped["folds"] != 5 or grouped["seed"] != 42:
+            raise AssertionError("Unexpected grouped evaluation scheme.")
+        if grouped["outer_group_overlap"] or grouped["inner_group_overlap"] or not grouped["note"]:
+            raise AssertionError("Grouped evaluation boundaries or note missing.")
+        values = [*grouped["pr_auc"].values()]
+        for budget in ("2", "5", "10"):
+            values.extend(grouped["at_budget"][budget]["recall"].values())
+            values.extend(grouped["at_budget"][budget]["precision"].values())
+        for typed in grouped["per_type_recall_at_5"].values():
+            values.extend(typed.values())
+        if any(not 0 <= value <= 1 for value in values):
+            raise AssertionError("Grouped metric outside [0,1].")
 
     def finite(value):
         if isinstance(value, float) and not math.isfinite(value):

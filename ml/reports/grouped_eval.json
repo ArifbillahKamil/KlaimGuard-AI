@@ -1,0 +1,154 @@
+{
+  "faskes_id": {
+    "group": "faskes_id",
+    "n_groups": 120,
+    "folds": 5,
+    "seed": 42,
+    "splitter": "StratifiedGroupKFold",
+    "stratification": "fraud_type",
+    "note": "Kelompok faskes terpisah pada outer train/uji dan inner validasi; IF dan referensi fitur tetap memakai batch penuh tanpa label sehingga evaluasi masih transduktif.",
+    "pr_auc": {
+      "xgb_only": 0.7329987898206249,
+      "hybrid": 0.7418664059961252
+    },
+    "at_budget": {
+      "2": {
+        "recall": {
+          "xgb_only": 0.43462643678160917,
+          "hybrid": 0.43785919540229884
+        },
+        "precision": {
+          "xgb_only": 0.9641434262948207,
+          "hybrid": 0.9713147410358566
+        },
+        "selected_claims": 1255
+      },
+      "5": {
+        "recall": {
+          "xgb_only": 0.7169540229885057,
+          "hybrid": 0.7244971264367817
+        },
+        "precision": {
+          "xgb_only": 0.6364795918367347,
+          "hybrid": 0.6431760204081632
+        },
+        "selected_claims": 3136
+      },
+      "10": {
+        "recall": {
+          "xgb_only": 0.7941810344827587,
+          "hybrid": 0.8045977011494253
+        },
+        "precision": {
+          "xgb_only": 0.35251913265306123,
+          "hybrid": 0.35714285714285715
+        },
+        "selected_claims": 6272
+      }
+    },
+    "per_type_recall_at_5": {
+      "phantom": {
+        "xgb_only": 0.46218487394957986,
+        "hybrid": 0.5273109243697479
+      },
+      "repeat": {
+        "xgb_only": 1.0,
+        "hybrid": 1.0
+      },
+      "upcoding": {
+        "xgb_only": 0.7857142857142857,
+        "hybrid": 0.7821428571428571
+      },
+      "unbundling": {
+        "xgb_only": 0.9752475247524752,
+        "hybrid": 0.9653465346534653
+      },
+      "inflated": {
+        "xgb_only": 0.2631578947368421,
+        "hybrid": 0.2706766917293233
+      },
+      "cloning": {
+        "xgb_only": 0.9702380952380952,
+        "hybrid": 0.9464285714285714
+      }
+    },
+    "outer_group_overlap": 0,
+    "inner_group_overlap": 0
+  },
+  "patient_id": {
+    "group": "patient_id",
+    "n_groups": 23171,
+    "folds": 5,
+    "seed": 42,
+    "splitter": "StratifiedGroupKFold",
+    "stratification": "fraud_type",
+    "note": "Kelompok pasien terpisah pada outer train/uji dan inner validasi; IF dan referensi fitur tetap memakai batch penuh tanpa label sehingga evaluasi masih transduktif.",
+    "pr_auc": {
+      "xgb_only": 0.8088624172340103,
+      "hybrid": 0.8047994513069543
+    },
+    "at_budget": {
+      "2": {
+        "recall": {
+          "xgb_only": 0.4421695402298851,
+          "hybrid": 0.44396551724137934
+        },
+        "precision": {
+          "xgb_only": 0.9808764940239044,
+          "hybrid": 0.9848605577689243
+        },
+        "selected_claims": 1255
+      },
+      "5": {
+        "recall": {
+          "xgb_only": 0.7805316091954023,
+          "hybrid": 0.7726293103448276
+        },
+        "precision": {
+          "xgb_only": 0.6929209183673469,
+          "hybrid": 0.685905612244898
+        },
+        "selected_claims": 3136
+      },
+      "10": {
+        "recall": {
+          "xgb_only": 0.8818247126436781,
+          "hybrid": 0.8775143678160919
+        },
+        "precision": {
+          "xgb_only": 0.391422193877551,
+          "hybrid": 0.38950892857142855
+        },
+        "selected_claims": 6272
+      }
+    },
+    "per_type_recall_at_5": {
+      "phantom": {
+        "xgb_only": 0.6302521008403361,
+        "hybrid": 0.6176470588235294
+      },
+      "repeat": {
+        "xgb_only": 1.0,
+        "hybrid": 1.0
+      },
+      "upcoding": {
+        "xgb_only": 0.8410714285714286,
+        "hybrid": 0.8303571428571429
+      },
+      "unbundling": {
+        "xgb_only": 0.9826732673267327,
+        "hybrid": 0.9826732673267327
+      },
+      "inflated": {
+        "xgb_only": 0.37781954887218044,
+        "hybrid": 0.3815789473684211
+      },
+      "cloning": {
+        "xgb_only": 0.9761904761904762,
+        "hybrid": 0.9404761904761905
+      }
+    },
+    "outer_group_overlap": 0,
+    "inner_group_overlap": 0
+  }
+}

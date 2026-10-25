@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import rankdata
 from sklearn.ensemble import IsolationForest
-from sklearn.model_selection import StratifiedKFold, train_test_split
+from sklearn.model_selection import StratifiedKFold, StratifiedGroupKFold, train_test_split
 from sklearn.preprocessing import RobustScaler
 from xgboost import XGBClassifier
 
@@ -62,7 +62,8 @@ def positive_weight(y: np.ndarray) -> float:
 
 def fit_nested_model(x: pd.DataFrame, y: np.ndarray, types: np.ndarray,
                      train_indexes: np.ndarray, test_indexes: np.ndarray,
-                     excluded_type: str | None = None) -> tuple[XGBClassifier, dict]:
+                     excluded_type: str | None = None,
+                     inner_groups: np.ndarray | None = None) -> tuple[XGBClassifier, dict]:
     """Select tree count on inner validation, then refit all outer train rows.
 
     Test indexes and labels are never passed to fit/early stopping. A holdout
@@ -72,8 +73,18 @@ def fit_nested_model(x: pd.DataFrame, y: np.ndarray, types: np.ndarray,
         train_indexes = train_indexes[types[train_indexes] != excluded_type]
     if np.intersect1d(train_indexes, test_indexes).size:
         raise AssertionError("Outer train/test overlap.")
-    inner_train, inner_valid = train_test_split(train_indexes, test_size=0.20,
-                                               random_state=SEED, stratify=types[train_indexes])
+    if inner_groups is None:
+        inner_train, inner_valid = train_test_split(train_indexes, test_size=0.20,
+                                                   random_state=SEED, stratify=types[train_indexes])
+    else:
+        if np.intersect1d(inner_groups[train_indexes], inner_groups[test_indexes]).size:
+            raise AssertionError("Outer groups overlap.")
+        inner = StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=SEED)
+        fit_positions, validation_positions = next(inner.split(
+            np.zeros(len(train_indexes)), types[train_indexes], groups=inner_groups[train_indexes]))
+        inner_train, inner_valid = train_indexes[fit_positions], train_indexes[validation_positions]
+        if np.intersect1d(inner_groups[inner_train], inner_groups[inner_valid]).size:
+            raise AssertionError("Inner groups overlap.")
     if np.intersect1d(inner_train, inner_valid).size:
         raise AssertionError("Inner train/validation overlap.")
     if excluded_type is not None and (types[train_indexes] == excluded_type).any():
@@ -96,6 +107,10 @@ def fit_nested_model(x: pd.DataFrame, y: np.ndarray, types: np.ndarray,
              "outer_train_test_disjoint": True, "inner_validation_is_subset_of_outer_train": True,
              "early_stopping_uses_outer_test": False,
              "feature_names": list(x.columns), "refit_on_full_outer_train_after_inner_selection": True}
+    if inner_groups is not None:
+        audit.update({"outer_groups_disjoint": True, "inner_groups_disjoint": True,
+                      "n_train_groups": len(np.unique(inner_groups[train_indexes])),
+                      "n_test_groups": len(np.unique(inner_groups[test_indexes]))})
     return model, audit
 
 
