@@ -22,6 +22,15 @@ export function Score({ value, large = false, tier }: { value: number; large?: b
 export function TierBadge({ tier }: { tier: Tier }) { return <span className={`badge tier-${tier}`}><span className="status-dot" />{({ high: 'Tinggi', medium: 'Menengah', low: 'Rendah' })[tier]}</span> }
 export function PatternChips({ patterns }: { patterns: string[] }) { return <div className="pattern-chips">{patterns.length ? patterns.map(p => <span className="pattern-chip" key={p} title={p}>{p}</span>) : <span className="muted text-xs">Belum ada pola dugaan</span>}</div> }
 export function Notice({ children, warning = false }: { children: ReactNode; warning?: boolean }) { return <div className={`notice ${warning ? 'notice-warning' : ''}`}><Info size={17} aria-hidden="true" /><div>{children}</div></div> }
+export function PerformanceLabel({ folds }: { folds?: number }) {
+  const { data } = useWorkspace()
+  return <p className="performance-label">Data sintetis | validasi silang {folds ?? data.report.config.folds}-fold</p>
+}
+export function PerformanceValue({ children, folds }: { children: ReactNode; folds?: number }) {
+  const { data } = useWorkspace()
+  const label = `Data sintetis | validasi silang ${folds ?? data.report.config.folds}-fold`
+  return <span className="performance-value" title={label} data-performance-label={label}>{children}<span className="sr-only"> · {label}</span></span>
+}
 export function Empty({ title = 'Belum ada klaim yang cocok.', text = 'Coba ubah filter atau kata pencarian.' }: { title?: string; text?: string }) { return <div className="empty"><ShieldCheck size={36} /><h3>{title}</h3><p>{text}</p></div> }
 export function Metric({ label, value, description, icon, color = 'teal' }: { label: string; value: ReactNode; description: string; icon: ReactNode; color?: string }) {
   return <div className="card metric"><div className="metric-label">{label}<span className={`metric-icon ${color}`}>{icon}</span></div><div className="metric-value">{value}</div><p>{description}</p></div>
@@ -48,4 +57,7 @@ export function ShapReasons({ claim }: { claim: Claim }) {
   const max = Math.max(...claim.reasons.map(r => Math.abs(r.shap)), 0.01)
   return <div className="shap-reasons">{claim.reasons.map((r, i) => <div className="reason" key={`${r.feature}-${i}`}><div className="reason-top"><b>{data.dictionary.find(f => f.feature === r.feature)?.label || r.feature}</b><span className={r.direction === 'up' ? 'coral' : 'teal'}>{r.direction === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownLeft size={14} />}{r.shap > 0 ? '+' : ''}{number(r.shap)}</span></div><div className="shap-track"><div className="shap-half shap-left">{r.direction === 'down' && <i style={{ width: `${Math.abs(r.shap) / max * 100}%` }} />}</div><div className="shap-half shap-right">{r.direction === 'up' && <i style={{ width: `${Math.abs(r.shap) / max * 100}%` }} />}</div></div><p>{r.text}</p></div>)}<div className="shap-axis"><span>← Menurunkan prioritas</span><span>Menaikkan prioritas →</span></div><p className="muted text-xs">Kontribusi SHAP menjelaskan keluaran model, bukan bukti sebab-akibat.</p></div>
 }
-export function BudgetStatement({ report }: { report: Report }) { return <span>Memeriksa <b className="teal">5%</b> klaim teratas menangkap <b className="teal">{percent(report.at_budget['5']?.recall.hybrid ?? 0)}</b> kasus berlabel, dibanding <b>5%</b> pada sampling acak.</span> }
+export function BudgetStatement({ report }: { report: Report }) {
+  const budget = 5
+  return <span>Memeriksa <b className="teal">{percent(budget / 100)}</b> klaim teratas menangkap <b className="teal"><PerformanceValue>{percent(report.at_budget[String(budget)]?.recall.hybrid ?? 0)}</PerformanceValue></b> kasus berlabel, dibanding ekspektasi <b><PerformanceValue>{percent(budget / 100)}</PerformanceValue></b> pada sampling acak.</span>
+}

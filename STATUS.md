@@ -1,6 +1,6 @@
 # STATUS — KlaimGuard AI
 
-Terakhir diperbarui: 24 Oktober 2026 (oleh Claude, sebelum handoff ke agent pembangun)
+Terakhir diperbarui: 25 Oktober 2026 (oleh agent pembangun; persetujuan Gate A bersyarat)
 Deadline: **1 November 2026** (target submit 31 Oktober)
 
 > Agent: perbarui file ini setelah setiap tahap (centang, tanggal, temuan, keputusan).
@@ -44,7 +44,7 @@ Catatan kompatibilitas: batas preflight awal Python >=3.10 terpenuhi oleh 3.12.6
 - [x] Scaffold Vite + React + TS + Tailwind, data contoh sesuai kontrak
 - [x] Ringkasan, Antrean Audit (panel detail + keputusan auditor + ekspor CSV)
 - [x] Faskes, Evaluasi Model (Mode Evaluasi), Tata Kelola
-- [ ] Sambungkan ke data asli dari Prompt 1
+- [x] Sambungkan ke ekspor ML aktual dari Prompt 1; simulasi anggaran, evaluasi kelompok, dan narasi batasan diperbarui
 - [x] Screenshot desktop + mobile di `web/screenshots/`
 
 Catatan agent kedua (24 Oktober 2026): pekerjaan dibatasi pada `web/` dan bagian Prompt 2 ini; `ml/` tidak disentuh, tidak deploy. Generator contoh sudah dijalankan: 300 klaim, 12 faskes, seed 42, lima JSON. Skor, SHAP, dan seluruh metrik/hold-out bersifat ilustratif, bukan hasil ML. Metadata tambahan `summary.data_source = "sample"` menampilkan peringatan contoh; generator menolak menimpa ekspor ML. Lima halaman, tabel virtual, filter, pengurutan, panel detail, keputusan lokal, CSV, Mode Evaluasi dan kondisi loading/error/empty sudah berjalan. Halaman Faskes dan Evaluasi dimuat secara lazy; font Inter disajikan lokal. Vite 6 dipilih agar cocok dengan Node v22.11.0 yang terbaca di sandbox; eksekusi build/QA di luar sandbox memakai Node v24.20.0. Lighthouse 13.5 (alat QA opsional) membutuhkan Node >=22.19. Build berhasil; QA browser 14 kelompok pemeriksaan lolos, termasuk penyimpanan kosong/rusak/ditolak dan CSV aman dari formula. Artefak final: 12 screenshot (lima halaman + detail, desktop dan mobile), indeks screenshot, web/QA.md, dan web/qa-report.json. Lighthouse desktop Ringkasan: Performance 100, Accessibility 100, Best Practices 100, LCP sekitar 0,5 detik pada 300 data contoh; bukan pengukuran data ML lengkap. Audit npm akhir: 0 kerentanan. Pemeriksaan aksesibilitas otomatis WCAG A/AA lima halaman desktop/mobile dan panel detail desktop lolos. npm run dev juga diuji: lima JSON HTTP 200 dan 0 error runtime pada smoke test. Integrasi JSON hasil ML tetap menunggu Prompt 1.

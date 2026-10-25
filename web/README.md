@@ -1,14 +1,12 @@
-# KlaimGuard AI — Dashboard
+# KlaimGuard AI — Dashboard terintegrasi
 
-Prototipe statis untuk memprioritaskan pemeriksaan klaim. **Seluruh data sintetis, bukan data peserta JKN. Angka performa bukan klaim performa dunia nyata. Keputusan akhir selalu pada auditor manusia.**
+Prototipe statis untuk rekomendasi prioritas pemeriksaan klaim. **Seluruh data sintetis, bukan data peserta JKN. Angka performa bukan klaim performa dunia nyata. Keputusan akhir selalu pada auditor manusia.**
 
-Versi ini memakai **300 klaim contoh, 12 faskes, seed 42**. Skor, kontribusi SHAP, PR-AUC, recall, dan hold-out adalah **ilustrasi antarmuka**, bukan hasil pelatihan ML. Penanda ini muncul pada setiap halaman. Dataset dalam `ml/` tidak digunakan atau diubah oleh generator contoh.
+Versi 25 Oktober 2026 memakai lima JSON hasil pipeline ML: 62.711 klaim sumber, 120 faskes, dan **3.000 klaim teratas** pada Antrean. Skor hybrid OOF, SHAP dan keputusan tier dari Gate A dipertahankan. Evaluasi tambahan per kelompok hanya menambah `model_report.grouped_eval`.
 
 ## Menjalankan lokal
 
-Node.js 20+ dan npm. Versi dependensi yang terpasang dikunci dalam `package-lock.json`.
-
-Pengukuran Lighthouse memakai alat QA Lighthouse 13.5 yang membutuhkan Node.js >=22.19; pengukuran sesi ini dijalankan dengan Node.js 24.20.0. Aplikasi Vite 6 sendiri tetap mendukung Node 20+. Inter dari Google Fonts disajikan lokal melalui Fontsource; tidak ada permintaan font ke layanan eksternal saat dashboard dibuka.
+Node.js 20+ dan npm untuk aplikasi; alat QA Lighthouse 13.5 membutuhkan Node.js >=22.19. Sesi QA memakai Node.js 24.20.0. Versi dependensi dikunci pada `package-lock.json`.
 
 ```powershell
 cd "C:\Users\diamo\Documents\VSC\Hackaton\BPJS Healtkathon\web"
@@ -16,70 +14,65 @@ npm ci
 npm run dev
 ```
 
-Buka URL lokal yang dicetak Vite. Untuk build produksi lokal:
+Build bersih dan preview:
 
 ```powershell
 npm run build
-npm run preview -- --port 4173
+npm run preview -- --port 4173 --strictPort
 ```
 
-Tidak ada backend, akun, API data eksternal, atau deployment. Lima halaman memakai hash router agar dapat dibuka langsung pada hosting statis.
+Tidak ada backend, akun atau API data eksternal. Hash router mendukung tautan langsung. Inter dari Google Fonts disajikan lokal melalui Fontsource.
 
-## Komponen utama
+## Halaman dan alur
 
 | Halaman | Fungsi |
-| --- | --- |
-| Ringkasan | KPI, distribusi persentil skor, komposisi dugaan, kurva lift, dan klaim prioritas. |
-| Antrean Audit | Tabel virtual, tujuh filter, pencarian, pengurutan, panel detail, tiga alasan SHAP, pembandingan median peer, keputusan dan CSV. |
-| Faskes | Ranking dari `risk_rank`, rasio klaim tinggi, pola, estimasi selisih biaya, dan klaim teratas per faskes. |
-| Evaluasi Model | Perbandingan tiga varian, recall 2/5/10%, lift, recall per pola, hold-out, fitur, alur, dan batasan. |
-| Tata Kelola | Data sintetis, pseudonim pasien, bias, peran manusia, mitigasi dan batas rencana produksi. |
+|---|---|
+| Ringkasan | KPI seluruh cohort, simulasi anggaran pemeriksaan 5%, histogram persentil, komposisi dugaan, lift dan klaim teratas. |
+| Antrean Audit | 3.000 klaim ekspor, tabel virtual, filter/pencarian/pengurutan, panel SHAP, median peer, keputusan auditor dan CSV. |
+| Faskes | Ranking seluruh faskes dengan area gulir, detail dan tautan ke antrean terfilter. |
+| Evaluasi Model | AP/recall/precision tiga varian; recall per jenis; hold-out; evaluasi faskes/pasien; batasan dan Mode Evaluasi. |
+| Tata Kelola | Perlindungan data, peran manusia, bias, batas produksi, serta rencana retraining dan jalur anomali untuk pola baru. |
 
-Halaman Faskes dan Evaluasi dimuat secara lazy. Grafik memakai SVG agar tidak membutuhkan pustaka chart besar. Antrean memakai TanStack Virtual agar jumlah elemen DOM tetap kecil saat ekspor ML berisi 3.000 klaim.
+Faskes dan Evaluasi dimuat secara lazy; grafik memakai SVG. TanStack Virtual membatasi jumlah baris DOM pada Antrean. Skor yang sama mempertahankan urutan ekspor saat diurutkan berdasarkan skor, sehingga pembulatan persentil tidak mengubah urutan prioritas sumber.
 
-Mode Evaluasi di halaman Evaluasi membuka kolom label sintetis pada Antrean dan matriks sederhana. Mode normal tidak menampilkan `eval`. Matriks hanya mencakup klaim ekspor yang berlabel, sehingga tidak mewakili seluruh dataset apabila ekspor terpotong. Skor adalah persentil rekomendasi, bukan probabilitas fraud.
+## Semua angka dari JSON
 
-Keputusan disimpan pada `localStorage` dengan key `klaimguard:auditor-decisions:v1`. Penyimpanan kosong, data rusak, dan akses yang ditolak ditangani. Jika penyimpanan gagal, keputusan tetap tersedia selama sesi dan bisa diekspor. CSV memakai UTF-8 BOM, quote escaping, dan penetralan formula pada awal sel. Penyimpanan ini bukan audit trail terpusat.
+UI melakukan `fetch` lima berkas `public/data/`: `summary.json`, `claims_flagged.json`, `faskes_risk.json`, `model_report.json`, `feature_dictionary.json`. Tidak ada hardcode metrik atau jumlah klaim dalam komponen. Pilihan anggaran 2/5/10% adalah skenario yang ditetapkan; nilainya dibaca dari JSON.
 
-## Kontrak JSON dan penggantian data contoh
+Simulasi anggaran 5% dihitung saat render:
 
-UI melakukan `fetch` terhadap lima berkas di `public/data/`:
+- Kasus tertangkap: ekspektasi sampling acak `5/100` dibanding `model_report.at_budget["5"].recall.hybrid`.
+- Proporsi klaim terperiksa yang berlabel bermasalah: `dataset.fraud_rate` dibanding precision hybrid pada anggaran tersebut.
+- Klaim diperiksa per kasus ditemukan: kebalikan base rate atau precision; denominator nol ditampilkan sebagai tidak tersedia.
 
-- `summary.json`
-- `claims_flagged.json`
-- `faskes_risk.json`
-- `model_report.json`
-- `feature_dictionary.json`
+Simulasi bukan eksperimen sampling baru, proyeksi penghematan, atau klaim performa dunia nyata. Label **"Data sintetis | validasi silang 5-fold"** terlihat pada setiap kelompok angka performa; tiap nilai juga membawa label itu pada tooltip dan teks pembaca layar. Fold dibaca dari konfigurasi JSON.
 
-Struktur mengikuti `../docs/00_KONTEKS_DAN_KONTRAK.md`. `summary.data_source: "sample"` adalah metadata tambahan untuk menampilkan peringatan contoh. Ekspor ML tidak perlu menambahkan properti ini. Ketika semua JSON diganti bersama-sama dengan ekspor Prompt 1, kode UI tidak perlu diubah. Tetap wajib `dataset.synthetic: true`. Jangan menghilangkan penanda contoh dari fixture tanpa mengganti semua skor dan metrik dengan hasil ML yang sebenarnya.
+Evaluasi per klaim menampilkan bahwa hybrid belum unggul atas `xgb_only` pada AP. Hasil kelompok dapat berbeda: kelompok faskes/pasien terpisah pada outer dan inner split, tetapi IF dan fitur referensi tetap menggunakan batch penuh tanpa label. Tabel kelompok tidak mengganti skor Antrean. Definisi overlap terarah dipilih setelah meninjau data penuh; keputusan ini dijelaskan di kotak Batasan.
 
-Generator tidak berjalan otomatis saat dev atau build. Untuk membangkitkan ulang contoh:
+## Evaluasi dan keputusan manusia
 
-```powershell
-npm run data:sample
-```
+Mode Evaluasi **nonaktif secara default** dan reset setelah reload. Label individual `eval` hanya terlihat setelah diaktifkan. Matriks dibatasi pada subset ekspor; pada anggaran yang mencakup seluruh subset, nol FN/TN tidak membuktikan semua kasus dataset tertangkap.
 
-Perintah itu menolak menimpa `summary.json` yang bukan data contoh. Tidak membaca atau mengubah `ml/`.
+Keputusan dan catatan disimpan pada `localStorage`, key `klaimguard:auditor-decisions:v1`. Storage kosong/rusak/ditolak ditangani. Jika storage gagal, keputusan tetap tersedia selama sesi dan bisa diekspor. CSV memakai UTF-8 BOM, escaping koma/kutip/baris baru, dan penetralan formula. Penyimpanan lokal bukan audit trail terpusat.
 
-## Pemeriksaan browser dan screenshot
+## QA dan screenshot
 
-Jalankan preview pada port 4173, lalu di terminal lain:
+Dengan preview port 4173 berjalan, di terminal lain:
 
 ```powershell
 npx playwright install chromium
 npm run qa
-```
-
-Pengukuran Lighthouse desktop (preview port 4173 tetap berjalan):
-
-```powershell
 node scripts/performance.mjs
 ```
 
-QA memeriksa kontrak data, kelima rute, virtualisasi, semua filter, empty/error/loading state, penyimpanan keputusan, CSV, Mode Evaluasi, tautan faskes, serta layar 390 px. Screenshot lima halaman dan panel detail dibuat untuk desktop dan mobile dalam `screenshots/`. Hasil terperinci lokal disimpan ke `qa-results/` (diabaikan Git).
+QA memakai data ML aktual: kontrak dan perhitungan simulasi, semua rute, filter, pengurutan, gulir 3.000 klaim, panel detail, keputusan, CSV, Mode Evaluasi, storage gagal, JSON gagal, loading/empty, aksesibilitas otomatis serta mobile 390 px. Negative test jaringan dijalankan terpisah dari pemeriksaan console normal.
 
-## Batas yang belum selesai
+Lighthouse mengukur **Ringkasan dan Antrean pada desktop dan mobile**, masing-masing satu run, dengan browser baru. Desktop: RTT 40 ms / 10.240 Kbps / CPU 1x. Mobile: RTT 150 ms / 1.638,4 Kbps / CPU 4x, viewport 390 × 844. Seluruh hasil disimpan; bukan pemilihan skor terbaik dari beberapa run.
 
-- Integrasi dengan JSON hasil pipeline ML menunggu Prompt 1. Tidak ada klaim pengujian model atau sanity check fitur ML dalam pekerjaan frontend ini.
-- Produksi on-premise, akses berbasis peran, audit trail terpusat, dan validasi data riil baru rencana.
-- Tidak ada deployment Vercel; Gate C tetap berlaku untuk pekerjaan deploy terpisah.
+Hasil dan batas pengukuran: [QA.md](QA.md), `qa-report.json`; 12 screenshot aktual dan indeks di [screenshots/](screenshots/README.md). Laporan mentah Lighthouse dan CSV uji ada pada `qa-results/` yang diabaikan Git.
+
+Generator contoh lama tidak dijalankan oleh dev/build dan menolak menimpa ekspor ML. Data yang digunakan QA memiliki `data_source: "ml_oof"`.
+
+## Batas pekerjaan
+
+Data sintetis dengan pola disuntikkan, evaluasi transduktif, dan perubahan overlap berdasarkan data penuh belum memvalidasi performa dunia nyata. Penerapan on-premise, akses berbasis peran dan audit trail terpusat masih rencana. **Berhenti di Gate C; belum deploy Vercel.**

@@ -20,12 +20,20 @@ export interface Summary {
   score_hist: { bin_edges: number[]; counts: number[] }; disclaimer: string
 }
 export type Variants = { if_only: number; xgb_only: number; hybrid: number }
+export type SupervisedVariants = Pick<Variants, 'xgb_only' | 'hybrid'>
+export interface GroupedEvaluation {
+  group: string; n_groups: number; folds: number; seed: number; note: string
+  pr_auc: SupervisedVariants
+  at_budget: Record<string, { recall: SupervisedVariants; precision: SupervisedVariants; selected_claims: number }>
+  per_type_recall_at_5: Record<string, SupervisedVariants>
+}
 export interface Report {
   config: { seed: number; folds: number; if_params: object; xgb_params: object }; pr_auc: Variants
-  at_budget: Record<string, { recall: Variants; precision: { hybrid: number } }>
+  at_budget: Record<string, { recall: Variants; precision: Variants }>
   lift_curve: { pct: number; recall_hybrid: number; recall_random: number }[]
   per_type_recall_at_5: Record<string, Variants>; holdout: Record<string, Variants>
   feature_importance: { feature: string; label: string; importance: number }[]; notes: string[]
+  grouped_eval?: Record<string, GroupedEvaluation>
 }
 export interface Feature { feature: string; label: string; explain: string; template: string }
 export interface Data { summary: Summary; claims: Claim[]; facilities: Facility[]; report: Report; dictionary: Feature[] }
