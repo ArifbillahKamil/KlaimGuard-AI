@@ -1,4 +1,4 @@
-import type { Data, Decision } from './types'
+import type { Claim, Data, Decision } from './types'
 
 export const number = (n: number) => new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 }).format(n)
 export const percent = (n: number, digits = 1) => new Intl.NumberFormat('id-ID', { style: 'percent', maximumFractionDigits: digits }).format(n)
@@ -8,15 +8,24 @@ export const date = (value: string) => new Intl.DateTimeFormat('id-ID', { day: '
 export const STORAGE_KEY = 'klaimguard:auditor-decisions:v1'
 
 export async function loadData(signal?: AbortSignal): Promise<Data> {
-  const names = ['summary', 'claims_flagged', 'faskes_risk', 'model_report', 'feature_dictionary']
-  const [summary, claims, facilities, report, dictionary] = await Promise.all(names.map(async name => {
+  const names = ['summary', 'faskes_risk', 'model_report', 'feature_dictionary']
+  const [summary, facilities, report, dictionary] = await Promise.all(names.map(async name => {
     const response = await fetch(`${import.meta.env.BASE_URL}data/${name}.json`, { signal })
     if (!response.ok) throw new Error(`${name}.json tidak dapat dimuat (HTTP ${response.status}).`)
     try { return await response.json() } catch { throw new Error(`Format ${name}.json tidak valid.`) }
   }))
   if (!summary?.dataset?.synthetic) throw new Error('Dashboard ini hanya menerima data sintetis sesuai kontrak proyek.')
-  if (!Array.isArray(claims) || !Array.isArray(facilities) || !Array.isArray(dictionary) || !Array.isArray(summary.score_hist?.counts) || !Array.isArray(report?.lift_curve)) throw new Error('Struktur JSON belum sesuai kontrak data. Periksa file ekspor.')
-  return { summary, claims, facilities, report, dictionary }
+  if (!Array.isArray(facilities) || !Array.isArray(dictionary) || !Array.isArray(summary.score_hist?.counts) || !Array.isArray(report?.lift_curve)) throw new Error('Struktur JSON belum sesuai kontrak data. Periksa file ekspor.')
+  return { summary, claims: [], claimsLoaded: false, facilities, report, dictionary }
+}
+
+export async function loadClaims(signal?: AbortSignal): Promise<Claim[]> {
+  const response = await fetch(`${import.meta.env.BASE_URL}data/claims_flagged.json`, { signal })
+  if (!response.ok) throw new Error(`claims_flagged.json tidak dapat dimuat (HTTP ${response.status}).`)
+  let claims: unknown
+  try { claims = await response.json() } catch { throw new Error('Format claims_flagged.json tidak valid.') }
+  if (!Array.isArray(claims)) throw new Error('Struktur JSON klaim belum sesuai kontrak data. Periksa file ekspor.')
+  return claims
 }
 
 export function readDecisions(): { decisions: Record<string, Decision>; error: string } {

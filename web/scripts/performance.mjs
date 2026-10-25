@@ -7,12 +7,15 @@ import assert from 'node:assert/strict'
 const root = fileURLToPath(new URL('../', import.meta.url))
 await mkdir(`${root}/qa-results`, { recursive: true })
 const results = []
+const label = process.argv.find(value => value.startsWith('--label='))?.slice(8) || ''
+assert.ok(!label || /^[a-z0-9-]+$/.test(label), 'Use a simple filename label')
+const mobileOnly = process.argv.includes('--mobile-only')
 const cases = [
   { page: 'ringkasan', hash: '#/', device: 'desktop' },
   { page: 'antrean', hash: '#/antrean', device: 'desktop' },
   { page: 'ringkasan', hash: '#/', device: 'mobile' },
   { page: 'antrean', hash: '#/antrean', device: 'mobile' },
-]
+].filter(test => !mobileOnly || test.device === 'mobile')
 for (const [index, test] of cases.entries()) {
   const port = 9223 + index
   const mobile = test.device === 'mobile'
@@ -24,7 +27,7 @@ for (const [index, test] of cases.entries()) {
       throttling: mobile ? { rttMs: 150, throughputKbps: 1638.4, cpuSlowdownMultiplier: 4 } : { rttMs: 40, throughputKbps: 10240, cpuSlowdownMultiplier: 1 },
       disableStorageReset: false,
     })
-    const stem = `lighthouse-${test.page}-${test.device}`
+    const stem = `lighthouse-${test.page}-${test.device}${label ? `-${label}` : ''}`
     await writeFile(`${root}/qa-results/${stem}.json`, result.report[0]); await writeFile(`${root}/qa-results/${stem}.html`, result.report[1])
     const finalUrl = result.lhr.finalDisplayedUrl || result.lhr.finalUrl
     assert.equal(new URL(finalUrl).hash, test.hash)
@@ -38,5 +41,5 @@ for (const [index, test] of cases.entries()) {
     results.push(entry); console.log(JSON.stringify(entry))
   } finally { await browser.close() }
 }
-await writeFile(`${root}/qa-results/performance-results.json`, JSON.stringify({ data: 'actual synthetic ML export, 3000 claims', runs_per_case: 1, results }, null, 2))
-console.log('Lighthouse complete: Ringkasan and Antrean, desktop and mobile. All measured results retained.')
+await writeFile(`${root}/qa-results/performance-${label || 'results'}.json`, JSON.stringify({ data: 'actual synthetic ML export, 3000 claims', runs_per_case: 1, results }, null, 2))
+console.log(`Lighthouse complete: ${cases.length} scenarios; label=${label || 'results'}. All measured results retained.`)

@@ -2,7 +2,7 @@ import { Component, lazy, Suspense, useCallback, useEffect, useState } from 'rea
 import type { ReactNode } from 'react'
 import { Activity, ArrowUpRight, Building2, ChartNoAxesCombined, ChevronRight, CircleHelp, FlaskConical, LayoutDashboard, ListChecks, Menu, RefreshCw, ShieldCheck, X } from 'lucide-react'
 import { WorkspaceContext } from './context'
-import { loadData, readDecisions, STORAGE_KEY } from './lib'
+import { loadClaims, loadData, readDecisions, STORAGE_KEY } from './lib'
 import type { Claim, Data, Decision, DecisionValue } from './types'
 import Overview from './pages/Overview'
 import Queue from './pages/Queue'
@@ -30,6 +30,7 @@ export default function App() {
   const [routeKey, setRouteKey] = useState(location.hash)
   const [data, setData] = useState<Data | null>(null)
   const [error, setError] = useState(''), [reload, setReload] = useState(0)
+  const [claimsError, setClaimsError] = useState('')
   const [menu, setMenu] = useState(false), [evaluation, setEvaluation] = useState(false)
   const [mobile, setMobile] = useState(() => matchMedia('(max-width: 760px)').matches)
   const [initialStorage] = useState(readDecisions)
@@ -50,6 +51,15 @@ export default function App() {
     loadData(controller.signal).then(setData).catch(e => { if (!controller.signal.aborted) setError(e instanceof Error ? e.message : 'Terjadi gangguan saat membaca data.') })
     return () => controller.abort()
   }, [reload])
+  useEffect(() => {
+    if (route !== '/antrean' || !data || data.claimsLoaded) return
+    const controller = new AbortController()
+    setClaimsError('')
+    loadClaims(controller.signal).then(claims => {
+      if (!controller.signal.aborted) setData(previous => previous ? { ...previous, claims, claimsLoaded: true } : previous)
+    }).catch(e => { if (!controller.signal.aborted) setClaimsError(e instanceof Error ? e.message : 'Data klaim belum dapat dimuat.') })
+    return () => controller.abort()
+  }, [route, Boolean(data), data?.claimsLoaded, reload])
   useEffect(() => { const escape = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenu(false) }; document.addEventListener('keydown', escape); return () => document.removeEventListener('keydown', escape) }, [])
   useEffect(() => { const media = matchMedia('(max-width: 760px)'); const change = () => setMobile(media.matches); media.addEventListener('change', change); return () => media.removeEventListener('change', change) }, [])
   const saveDecision = (claim: Claim, decision: DecisionValue, note: string) => {
@@ -58,6 +68,8 @@ export default function App() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(updated)); setStorageError('') } catch { setStorageError('Penyimpanan lokal gagal. Keputusan tersedia selama sesi ini; ekspor CSV sebelum menutup halaman.') }
   }
   const page = route === '/' ? <Overview /> : route === '/antrean' ? <Queue key={routeKey} /> : route === '/faskes' ? <Facilities /> : route === '/evaluasi' ? <Evaluation /> : route === '/tata-kelola' ? <Governance /> : <div className="empty"><h1>Halaman tidak ditemukan</h1><p>Pilih halaman dari navigasi.</p><a className="button button-primary" href="#/">Kembali ke Ringkasan</a></div>
+  const activeError = error || (route === '/antrean' ? claimsError : '')
+  const loading = !data || (route === '/antrean' && !data.claimsLoaded)
   const shell = <>
     <a className="skip-link" href="#main-content" onClick={e => { e.preventDefault(); document.getElementById('main-content')?.focus() }}>Lewati ke konten utama</a>
     {menu && <button className="nav-backdrop" aria-label="Tutup navigasi" onClick={() => setMenu(false)} />}
@@ -66,7 +78,7 @@ export default function App() {
     </aside>
     <div className="app-main"><header className="topbar"><div className="breadcrumb"><button className="mobile-menu icon-button" aria-label="Buka navigasi" aria-expanded={menu} onClick={() => setMenu(!menu)}><Menu size={22} /></button><span>Ruang kerja auditor</span><ChevronRight size={13} /><b>{current?.name || 'Halaman'}</b></div><div className="topbar-status">{evaluation && <a href="#/evaluasi" className="evaluation-pill"><FlaskConical size={13} />Mode Evaluasi</a>}<span className="connection-dot" /><span>Prototipe lokal</span><span className="topbar-avatar">AK</span></div></header>
       <div className="data-banner"><span><Activity size={14} /><b>{data?.summary.data_source === 'sample' ? 'Data contoh sintetis' : 'Data sintetis'}</b><span className="banner-dot">·</span>Skor adalah rekomendasi prioritas</span><span className="banner-right">{data?.summary.data_source === 'sample' ? 'Angka & SHAP ilustratif · bukan hasil ML' : 'Bukan klaim performa dunia nyata'}</span></div>
-      <main id="main-content" tabIndex={-1}><PageBoundary key={routeKey}>{error ? <div className="error-state" role="alert"><CircleHelp size={36} /><h1>Data belum dapat dimuat.</h1><p>{error}</p><p>Pastikan lima file JSON tersedia di folder public/data.</p><button className="button button-primary" onClick={() => { setData(null); setReload(n => n + 1) }}><RefreshCw size={15} />Coba lagi</button></div> : !data ? <Skeleton /> : <Suspense fallback={<Skeleton />}>{page}</Suspense>}</PageBoundary></main>
+      <main id="main-content" tabIndex={-1}><PageBoundary key={routeKey}>{activeError ? <div className="error-state" role="alert"><CircleHelp size={36} /><h1>Data belum dapat dimuat.</h1><p>{activeError}</p><p>Pastikan lima file JSON tersedia di folder public/data.</p><button className="button button-primary" onClick={() => { setData(null); setClaimsError(''); setReload(n => n + 1) }}><RefreshCw size={15} />Coba lagi</button></div> : loading ? <Skeleton /> : <Suspense fallback={<Skeleton />}>{page}</Suspense>}</PageBoundary></main>
       <footer className="app-footer"><span><ShieldCheck size={14} />Data sintetis · Bukan data peserta JKN.</span><span>Angka performa bukan klaim performa dunia nyata. Keputusan akhir ada pada auditor.</span></footer>
     </div>
     {data && selected && <ClaimDrawer key={selected.claim_id} claim={selected} onClose={closeDrawer} />}

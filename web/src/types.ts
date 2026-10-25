@@ -36,6 +36,6 @@ export interface Report {
   grouped_eval?: Record<string, GroupedEvaluation>
 }
 export interface Feature { feature: string; label: string; explain: string; template: string }
-export interface Data { summary: Summary; claims: Claim[]; facilities: Facility[]; report: Report; dictionary: Feature[] }
+export interface Data { summary: Summary; claims: Claim[]; claimsLoaded: boolean; facilities: Facility[]; report: Report; dictionary: Feature[] }
 export type DecisionValue = 'Perlu diperiksa' | 'Wajar' | 'Eskalasi'
 export interface Decision { claim_id: string; decision: DecisionValue; note: string; updated_at: string }
